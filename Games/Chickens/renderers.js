@@ -127,14 +127,15 @@ class Rend4 extends PureComponent {
   render() {
     const x = this.props.body.position.x;
     const y = this.props.body.position.y;
-    const balloonImage = this.props.balloonImage;
-    var rt = this.props.rt;
+    const balloonImage = this.props.theImage;
     const wd=this.props.wd;
     const ht=this.props.ht;
     var refresh=this.props.refresh;
-
+    var x1=x-(wd/2);
+    var y1=y-(ht/2);
+    var rt = ""+Math.floor(this.props.body.angle*180/Math.PI)+"deg";
     return (
-      <Image source={balloonImage} style={[styles.rect, { left:x, top: y,width:wd,height:ht }]} />
+      <Image source={balloonImage} style={[styles.rect, { left:x1, top: y1,width:wd,height:ht }]} />
       );
   }
 }

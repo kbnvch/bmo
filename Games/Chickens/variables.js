@@ -10,10 +10,13 @@ const Variables = {
 
 
 
-  GroundImage: require("./pics/ground.png"),//barrier0
-  BarrierImage: require("./pics/barrier0.png"),//barrier0
-  Rnb1Image: require("./pics/rnb1.png"),//barrier0
-  Rnb2Image: require("./pics/rnb2.png"),//barrier0
+  GroundImage: require("./pics/ground.png"),//
+  PlankImage: require("./pics/plank01.png"),//
+  PillarImage: require("./pics/pillar.png"),//
+  BoltImage: require("./pics/bolt.png"),//
+  BarrierImage: require("./pics/barrier0.png"),//
+  Rnb1Image: require("./pics/rnb1.png"),//
+  Rnb2Image: require("./pics/rnb2.png"),//
 
 
   EmptyArrowImage: require("./pics/arrow_empty.png"),
