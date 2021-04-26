@@ -191,13 +191,15 @@ export default class Chickens extends PureComponent {
             chicken2: { body:undefined,wd:arrWdt,ht:arrHeight,theImage: arrowImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
             chicken3: { body:undefined,wd:arrWdt,ht:arrHeight,theImage: arrowImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
             chicken4: { body:undefined,wd:arrWdt,ht:arrHeight,theImage: arrowImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
+           
+            catapult5: { body:undefined,wd:plankwidth,ht:plankHeight,theImage: plankImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
 
          //   bolt: { body:undefined,wd:pillarwidth*0.8,ht:pillarwidth*0.8,theImage: boltImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
 
 
-         //   plank: { body:undefined,wd:plankwidth,ht:plankHeight,theImage: groundImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
-         //   pillar:{ posX:0,posY:0,WIDTH: pillarwidth, HEIGHT: pillarHeight, rImg: pillarImage, renderer: <RendZ /> }, 
-
+       //     plank: { body:undefined,wd:plankwidth,ht:plankHeight,theImage: plankImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
+       
+           // stand6:{ posX:0,posY:0,WIDTH: pillarwidth, HEIGHT: pillarHeight, rImg: pillarImage, renderer: <RendZ /> }, 
             store:{wd:WIDTH,ht:HEIGHT},
            
 

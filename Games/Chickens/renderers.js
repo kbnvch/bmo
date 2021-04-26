@@ -135,7 +135,7 @@ class Rend4 extends PureComponent {
     var y1=y-(ht/2);
     var rt = ""+Math.floor(this.props.body.angle*180/Math.PI)+"deg";
     return (
-      <Image source={balloonImage} style={[styles.rect, { left:x1, top: y1,width:wd,height:ht }]} />
+      <Image source={balloonImage} style={[styles.rect, { transform: [{rotate: rt}],left:x1, top: y1,width:wd,height:ht }]} />
       );
   }
 }
