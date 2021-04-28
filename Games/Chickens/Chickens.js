@@ -9,6 +9,7 @@ const winingImageNr = Variables.WiningImageNr;
 const arrowImage = Variables.ArrowImage;
 const balloonImage = Variables.BalloonImage;
 
+
 const groundImage = Variables.GroundImage;
 const plankImage = Variables.PlankImage;
 const pillarImage = Variables.PillarImage;
@@ -16,6 +17,9 @@ const boltImage = Variables.BoltImage;
 const barrierImage = Variables.BarrierImage;
 const rnb1Image = Variables.Rnb1Image;
 const rnb2Image = Variables.Rnb2Image;
+const redImage = Variables.RedImage;
+const boxImage = Variables.BoxImage;
+const wallImage = Variables.WallImage;
 
 const backgroundImage = Variables.BackgroundImage;
 const emptyArrowImage = Variables.EmptyArrowImage;
@@ -41,6 +45,7 @@ import { RendZ } from "./renderers";
 //import { UpdateLoop } from "./systems"
 //import { UpdateLoop2 } from "./systems"
 import {Physics} from "./systems2"
+import {GameLoop} from "./systems2"
 //import {resetSys} from "./systems";
 
 
@@ -84,11 +89,11 @@ const rnb2width = (WIDTH/1.3-boxysize);//*2;
 const rnb2Height = rnb2width * rnb2Proportion;//rnb1Image
 
 const plankProportion = Image.resolveAssetSource(plankImage).height / Image.resolveAssetSource(plankImage).width;
-const plankwidth = (WIDTH/1.6);
+const plankwidth = (WIDTH/2.2);
 const plankHeight = plankwidth * plankProportion;//rnb1Image
 
 const pillarProportion = Image.resolveAssetSource(pillarImage).height / Image.resolveAssetSource(pillarImage).width;
-const pillarwidth = (plankHeight);
+const pillarwidth = (plankHeight)*1.06;
 const pillarHeight = pillarwidth * pillarProportion;//rnb1Image
 
 const margin = ScreenData.margin;
@@ -96,6 +101,10 @@ const arrProportion = Image.resolveAssetSource(arrowImage).height / Image.resolv
 const arrWdt=(rnb1width/3.5);
 const arrHeight = arrWdt * arrProportion;
 const topP = HEIGHT - arrHeight - arrHeight / 10;
+
+const wallProportion = Image.resolveAssetSource(wallImage).height / Image.resolveAssetSource(wallImage).width;
+const wallHeight = HEIGHT;//rnb1Image
+const wallwidth = (wallHeight)/wallProportion;
 
 
 //barrierImage
@@ -134,7 +143,7 @@ export default class Chickens extends PureComponent {
     theprops = props;
     console.log("starting game");
     this1 = this;
-    systz= [Physics];
+    systz= [Physics,GameLoop];
    
 
 
@@ -170,7 +179,7 @@ export default class Chickens extends PureComponent {
           entities={{
             0:{ WIDTH: WIDTH, HEIGHT: HEIGHT, BGimage: backgroundImage, renderer: <TheBackground /> }, 
             ground1:{ posX:0,posY:HEIGHT-grndHeight,WIDTH: WIDTH, HEIGHT: grndHeight, rImg: groundImage, renderer: <RendZ /> }, 
-
+            wall1:{ posX:0-wallwidth/2,posY:0,WIDTH: wallwidth, HEIGHT: wallHeight, rImg: wallImage, renderer: <RendZ /> }, 
            // barrier1:{ posX:(WIDTH/2)-(brjwidth/2),posY:100,WIDTH: brjwidth, HEIGHT: brjHeight, rImg: barrierImage, renderer: <RendZ /> },
             
             rnb1:{ posX:WIDTH-rnb1width,posY:rnb1Height,WIDTH: rnb1width, HEIGHT: rnb1Height, rImg: rnb1Image, renderer: <RendZ /> },
@@ -193,13 +202,13 @@ export default class Chickens extends PureComponent {
             chicken4: { body:undefined,wd:arrWdt,ht:arrHeight,theImage: arrowImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
            
             catapult5: { body:undefined,wd:plankwidth,ht:plankHeight,theImage: plankImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
-
-         //   bolt: { body:undefined,wd:pillarwidth*0.8,ht:pillarwidth*0.8,theImage: boltImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
+            stand6:{ posX:0,posY:0,WIDTH: pillarwidth, HEIGHT: pillarHeight, rImg: pillarImage, renderer: <RendZ /> },
+            ball7: { body:undefined,wd:pillarwidth*1.8,ht:pillarwidth*1.8,theImage: boltImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
 
 
        //     plank: { body:undefined,wd:plankwidth,ht:plankHeight,theImage: plankImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
-       
-           // stand6:{ posX:0,posY:0,WIDTH: pillarwidth, HEIGHT: pillarHeight, rImg: pillarImage, renderer: <RendZ /> }, 
+       chicken99: { body:undefined,wd:arrWdt,ht:arrHeight,theImage: boxImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
+            
             store:{wd:WIDTH,ht:HEIGHT},
            
 
