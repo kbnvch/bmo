@@ -20,6 +20,8 @@ const Variables = {
   RedImage: require("./pics/red.png"),//
   BoxImage: require("./pics/box1.png"),//
   WallImage: require("./pics/wall1.png"),//
+  RoofImage: require("./pics/roof1.png"),//
+  CageImage: require("./pics/cage01.png"),
 
   EmptyArrowImage: require("./pics/arrow_empty.png"),
   BalloonImage: require("./pics/balloon.png"),

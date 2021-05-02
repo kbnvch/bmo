@@ -20,6 +20,8 @@ const rnb2Image = Variables.Rnb2Image;
 const redImage = Variables.RedImage;
 const boxImage = Variables.BoxImage;
 const wallImage = Variables.WallImage;
+const roofImage = Variables.RoofImage;
+const cageImage = Variables.CageImage;
 
 const backgroundImage = Variables.BackgroundImage;
 const emptyArrowImage = Variables.EmptyArrowImage;
@@ -44,8 +46,8 @@ import { RendZ } from "./renderers";
 //import { UpdLoop } from "./systems"
 //import { UpdateLoop } from "./systems"
 //import { UpdateLoop2 } from "./systems"
-import {Physics} from "./systems2"
-import {GameLoop} from "./systems2"
+import { Physics } from "./systems2"
+import { GameLoop } from "./systems2"
 //import {resetSys} from "./systems";
 
 
@@ -81,30 +83,49 @@ const brjwidth = boxysize;//*2;
 const brjHeight = brjwidth * brjProportion;//rnb1Image
 
 const rnb1Proportion = Image.resolveAssetSource(rnb1Image).height / Image.resolveAssetSource(rnb1Image).width;
-const rnb1width = (WIDTH/1.3-boxysize);//*2;
+var rnb1width = (WIDTH / 1.3 - boxysize);//*2;
+console.log("starting rnb1width value: "+rnb1width+"   and proportion:"+(rnb1width/HEIGHT));
+if ((rnb1width/HEIGHT)>0.39){
+  rnb1width=0.39*HEIGHT;
+  console.log("changing proportionsA.value: "+rnb1width);
+}
 const rnb1Height = rnb1width * rnb1Proportion;//rnb1Image
 
 const rnb2Proportion = Image.resolveAssetSource(rnb2Image).height / Image.resolveAssetSource(rnb2Image).width;
-const rnb2width = (WIDTH/1.3-boxysize);//*2;
+var rnb2width = (WIDTH / 1.3 - boxysize);//*2;
+if ((rnb2width/HEIGHT)>0.39){
+  rnb2width=0.39*HEIGHT;
+  console.log("changing proportionsB. Value: "+rnb2width);
+}
 const rnb2Height = rnb2width * rnb2Proportion;//rnb1Image
 
+
+
 const plankProportion = Image.resolveAssetSource(plankImage).height / Image.resolveAssetSource(plankImage).width;
-const plankwidth = (WIDTH/2.2);
+const plankwidth = (WIDTH / 2.2);
 const plankHeight = plankwidth * plankProportion;//rnb1Image
 
 const pillarProportion = Image.resolveAssetSource(pillarImage).height / Image.resolveAssetSource(pillarImage).width;
-const pillarwidth = (plankHeight)*1.06;
+const pillarwidth = (plankHeight) * 1.06;
 const pillarHeight = pillarwidth * pillarProportion;//rnb1Image
 
 const margin = ScreenData.margin;
 const arrProportion = Image.resolveAssetSource(arrowImage).height / Image.resolveAssetSource(arrowImage).width;
-const arrWdt=(rnb1width/3.5);
+const arrWdt = (rnb1width / 3.5);
 const arrHeight = arrWdt * arrProportion;
 const topP = HEIGHT - arrHeight - arrHeight / 10;
 
 const wallProportion = Image.resolveAssetSource(wallImage).height / Image.resolveAssetSource(wallImage).width;
-const wallHeight = HEIGHT;//rnb1Image
-const wallwidth = (wallHeight)/wallProportion;
+const wallHeight = HEIGHT - grndHeight;//rnb1Image
+const wallwidth = (wallHeight) / wallProportion;
+
+const roofProportion = Image.resolveAssetSource(roofImage).height / Image.resolveAssetSource(roofImage).width;
+const roofWidth = WIDTH;
+const roofHeight = roofWidth * roofProportion;//rnb1Image
+
+const cageProportion = Image.resolveAssetSource(cageImage).height / Image.resolveAssetSource(cageImage).width;
+const cageWidth = WIDTH / 6;
+const cageHeight = cageWidth * cageProportion;//rnb1Image
 
 
 //barrierImage
@@ -119,6 +140,8 @@ const arrBox = getArrowBoxes();
 const ballBox = getBalloonBoxes();
 const prizProportion = Image.resolveAssetSource(prizeImages[0]).height / Image.resolveAssetSource(prizeImages[0]).width;
 const expProportion = Image.resolveAssetSource(exp1).height / Image.resolveAssetSource(exp1).width;
+const expWidth=cageWidth;
+const expHeight=expWidth*expProportion;
 const binary = [0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0];
 const bloons = [13, 18, 11, 16, 14, 19, 20, 17, 12, 15];
 
@@ -143,8 +166,8 @@ export default class Chickens extends PureComponent {
     theprops = props;
     console.log("starting game");
     this1 = this;
-    systz= [Physics,GameLoop];
-   
+    systz = [Physics, GameLoop];
+
 
 
     if (ifWin == false) {
@@ -153,12 +176,8 @@ export default class Chickens extends PureComponent {
       getPrizesWin(winingImageNr);
     }
     console.log("   " + przNrs);
+    console.log("rnb1width value: "+rnb1width);
 
-    //  for (let i = 0; i < 200; i++) {
-    //   getRandomPrizesNoWin();
-    //    console.log("   "+przNrs);
-
-    //  }
   }
   componentWillUnmount() {
     przNrs = [];
@@ -177,40 +196,67 @@ export default class Chickens extends PureComponent {
           style={styles.container}
           systems={systz}
           entities={{
-            0:{ WIDTH: WIDTH, HEIGHT: HEIGHT, BGimage: backgroundImage, renderer: <TheBackground /> }, 
-            ground1:{ posX:0,posY:HEIGHT-grndHeight,WIDTH: WIDTH, HEIGHT: grndHeight, rImg: groundImage, renderer: <RendZ /> }, 
-            wall1:{ posX:0-wallwidth/2,posY:0,WIDTH: wallwidth, HEIGHT: wallHeight, rImg: wallImage, renderer: <RendZ /> }, 
-           // barrier1:{ posX:(WIDTH/2)-(brjwidth/2),posY:100,WIDTH: brjwidth, HEIGHT: brjHeight, rImg: barrierImage, renderer: <RendZ /> },
-            
-            rnb1:{ posX:WIDTH-rnb1width,posY:rnb1Height,WIDTH: rnb1width, HEIGHT: rnb1Height, rImg: rnb1Image, renderer: <RendZ /> },
-            rnb2:{ posX:WIDTH-rnb2width,posY:rnb2Height+rnb1Height*2,WIDTH: rnb2width, HEIGHT: rnb2Height, rImg: rnb2Image, renderer: <RendZ /> },  
-/**
-     const x = this.props.posX;
-    const y = this.props.posY;
-    const bllwidth =this.props.bllwidth;
-    const blHeight=this.props.blHeight;
-    const balloonImage = this.props.balloonImage;
-    var rt = this.props.rt; 
-  
-  
-  
- 
- */
-            chicken1: { body:undefined,wd:arrWdt,ht:arrHeight,theImage: arrowImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
-            chicken2: { body:undefined,wd:arrWdt,ht:arrHeight,theImage: arrowImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
-            chicken3: { body:undefined,wd:arrWdt,ht:arrHeight,theImage: arrowImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
-            chicken4: { body:undefined,wd:arrWdt,ht:arrHeight,theImage: arrowImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
-           
-            catapult5: { body:undefined,wd:plankwidth,ht:plankHeight,theImage: plankImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
-            stand6:{ posX:0,posY:0,WIDTH: pillarwidth, HEIGHT: pillarHeight, rImg: pillarImage, renderer: <RendZ /> },
-            ball7: { body:undefined,wd:pillarwidth*1.8,ht:pillarwidth*1.8,theImage: boltImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
+            0: { WIDTH: WIDTH, HEIGHT: HEIGHT, BGimage: backgroundImage, renderer: <TheBackground /> },
+            ground1: { posX: 0, posY: HEIGHT - grndHeight, WIDTH: WIDTH, HEIGHT: grndHeight, rImg: groundImage, renderer: <RendZ /> },
+            roof1: { posX: 0, posY: (0 - roofHeight / 2), WIDTH: roofWidth, HEIGHT: roofHeight, rImg: roofImage, renderer: <RendZ /> },
+            wall1: { posX: 0 - wallwidth / 2, posY: 0, WIDTH: wallwidth, HEIGHT: wallHeight, rImg: wallImage, renderer: <RendZ /> },
+
+            // barrier1:{ posX:(WIDTH/2)-(brjwidth/2),posY:100,WIDTH: brjwidth, HEIGHT: brjHeight, rImg: barrierImage, renderer: <RendZ /> },
+
+            rnb1: { posX: WIDTH - rnb1width, posY: (rnb1Height * 1.2), WIDTH: rnb1width, HEIGHT: rnb1Height, rImg: rnb1Image, renderer: <RendZ /> },
+            rnb2: { posX: WIDTH - rnb2width, posY: (rnb2Height * 1.2) + rnb1Height * 2, WIDTH: rnb2width, HEIGHT: rnb2Height, rImg: rnb2Image, renderer: <RendZ /> },
+            /**
+                 const x = this.props.posX;
+                const y = this.props.posY;
+                const bllwidth =this.props.bllwidth;
+                const blHeight=this.props.blHeight;
+                const balloonImage = this.props.balloonImage;
+                var rt = this.props.rt; 
+              
+              
+              
+             
+             */
+            chicken1: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken2: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken3: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken4: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+
+            chicken5: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken6: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken7: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken8: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
 
 
-       //     plank: { body:undefined,wd:plankwidth,ht:plankHeight,theImage: plankImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
-       chicken99: { body:undefined,wd:arrWdt,ht:arrHeight,theImage: boxImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
-            
-            store:{wd:WIDTH,ht:HEIGHT},
-           
+
+
+
+            catapult5: { body: undefined, wd: plankwidth, ht: plankHeight, theImage: plankImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            stand6: { posX: 0, posY: 0, WIDTH: pillarwidth, HEIGHT: pillarHeight, rImg: pillarImage, renderer: <RendZ /> },
+            ball7: { body: undefined, wd: pillarwidth * 1.8, ht: pillarwidth * 1.8, theImage: boltImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+
+            cage1: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage2: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage3: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage4: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage5: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage6: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage7: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            //  cage5: { body:undefined,wd:cageWidth,ht:cageHeight,theImage: cageImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
+
+            expl1: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl2: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl3: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl4: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl5: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl6: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl7: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+
+
+            chicken99: { body: undefined, wd: arrWdt, ht: arrHeight, theImage: boxImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+
+            store: { wd: WIDTH, ht: HEIGHT },
+
 
           }}>
 
@@ -221,35 +267,35 @@ export default class Chickens extends PureComponent {
     }
     else {
       return (
-      <GameEngine>
-        <StatusBar hidden={true} />
-      </GameEngine>);
+        <GameEngine>
+          <StatusBar hidden={true} />
+        </GameEngine>);
     }
   }
 }
 
 function Win() {
   console.log("won!!!");
-//do something
-goBackToMainApp();
+  //do something
+  goBackToMainApp();
 }
 
 function Lose() {
   console.log("lost!!!");
-//do something
-goBackToMainApp();
+  //do something
+  goBackToMainApp();
 }
 
 
 
-function goBackToMainApp(){
+function goBackToMainApp() {
   runnin = false;
   this1.forceUpdate();
-  setTimeout( () => {
-  appreg.registerComponent(appName, () => App);
-  appreg.runApplication(appName,theprops);
-  runnin = true;
- }, 2000);
+  setTimeout(() => {
+    appreg.registerComponent(appName, () => App);
+    appreg.runApplication(appName, theprops);
+    runnin = true;
+  }, 2000);
 }
 
 function Place(stage) {
