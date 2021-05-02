@@ -191,3 +191,4 @@ const styles = StyleSheet.create({
 export { TheBackground };
 export { Rend4 };
 export { RendZ };
+export {PrizeBox1};

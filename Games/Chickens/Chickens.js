@@ -42,13 +42,14 @@ import { RendZ } from "./renderers";
 //import { Rend2 } from "./renderers";
 //import { Rend1 } from "./renderers";
 //import { Circle1 } from "./renderers";
-//import { PrizeBox1 } from "./renderers";
+import { PrizeBox1 } from "./renderers";
 //import { UpdLoop } from "./systems"
 //import { UpdateLoop } from "./systems"
 //import { UpdateLoop2 } from "./systems"
 import { Physics } from "./systems2"
 import { GameLoop } from "./systems2"
-//import {resetSys} from "./systems";
+import {AnimationLoop} from "./systems2";
+import {resetSys} from "./systems2";
 
 
 import appreg from './../../appRegistryController';
@@ -166,7 +167,7 @@ export default class Chickens extends PureComponent {
     theprops = props;
     console.log("starting game");
     this1 = this;
-    systz = [Physics, GameLoop];
+    systz = [Physics, GameLoop,AnimationLoop];
 
 
 
@@ -184,7 +185,7 @@ export default class Chickens extends PureComponent {
     theprops = undefined;
     this1 = undefined;
     runnin = true;
-    //resetSys();
+    resetSys();
 
     console.log("unmounting!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
   }
@@ -221,6 +222,12 @@ export default class Chickens extends PureComponent {
             chicken2: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
             chicken3: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
             chicken4: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken5: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken6: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken7: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken8: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+
+
 
             catapult5: { body: undefined, wd: plankwidth, ht: plankHeight, theImage: plankImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
             stand6: { posX: 0, posY: 0, WIDTH: pillarwidth, HEIGHT: pillarHeight, rImg: pillarImage, renderer: <RendZ /> },
@@ -231,19 +238,28 @@ export default class Chickens extends PureComponent {
             cage3: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
             cage4: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
             cage5: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            //  cage5: { body:undefined,wd:cageWidth,ht:cageHeight,theImage: cageImage,refresh:0,rt:"0deg", renderer: <Rend4 /> },
+            cage6: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage7: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
 
             expl1: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
             expl2: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
             expl3: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
             expl4: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
             expl5: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl6: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl7: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
 
 
             chicken99: { body: undefined, wd: arrWdt, ht: arrHeight, theImage: boxImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
 
-            store: { wd: WIDTH, ht: HEIGHT },
+            store: { wd: WIDTH, ht: HEIGHT, refresh: 0, Win:Win,Lose:Lose,ifWin:ifWin,prizes: prizeImages, winNr:winingImageNr },
 
+            ent24: { boxImg: boxBackgroundImage, img: emptyImg, posX: WIDTH, tx: "You win !", WIDTH: WIDTH, HEIGHT: HEIGHT, renderer: <PrizeBox1 /> },
+            
+            
+            pr1: { posX: -1000, posY: -1000, WIDTH: cageWidth, HEIGHT: cageHeight, rImg: cageImage, renderer: <RendZ /> },
+            pr2: { posX: -1000, posY: -1000, WIDTH: cageWidth, HEIGHT: cageHeight, rImg: cageImage, renderer: <RendZ /> },
+            pr3: { posX: -1000, posY: -1000, WIDTH: cageWidth, HEIGHT: cageHeight, rImg: cageImage, renderer: <RendZ /> },
 
           }}>
 
