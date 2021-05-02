@@ -20,12 +20,9 @@ var cage2Body;
 var cage3Body;
 var cage4Body;
 var cage5Body;
-var cage6Body;
-var cage7Body;
 var ballBody;
 
 var goingChicken;
-var opencagesCount=0;
 
 
 
@@ -106,25 +103,6 @@ const Physics = (entities, { time }) => {
     Matter.Sleeping.set(entities.chicken4.body, true);
     //Matter.World.add(wrld1, entities.chicken4.body);
 
-    stX = entities.rnb2.posX;
-    stY = entities.rnb2.posY;
-
-    entities.chicken5.body = Matter.Bodies.rectangle(stX + (wd * 0), stY, wd, ht, { mass: 15 });
-    Matter.Sleeping.set(entities.chicken1.body, true);
-    //Matter.World.add(wrld1, entities.chicken1.body);
-
-    entities.chicken6.body = Matter.Bodies.rectangle(stX + (wd * 1) + 1, stY - wd * 0.45, wd, ht, { mass: 20 });
-    Matter.Sleeping.set(entities.chicken2.body, true);
-    //Matter.World.add(wrld1, entities.chicken2.body);
-
-    entities.chicken7.body = Matter.Bodies.rectangle(stX + (wd * 2) + 2, stY - wd * 0.45, wd, ht, { mass: 30 });
-    Matter.Sleeping.set(entities.chicken3.body, true);
-    //Matter.World.add(wrld1, entities.chicken3.body);
-
-    entities.chicken8.body = Matter.Bodies.rectangle(stX + (wd * 3) + 3, stY, wd, ht, { mass: 40 });
-    Matter.Sleeping.set(entities.chicken4.body, true);
-    //Matter.World.add(wrld1, entities.chicken4.body);
-
 
 
 
@@ -140,7 +118,7 @@ const Physics = (entities, { time }) => {
     entities.catapult5.body.friction = 1;
     Matter.Body.setStatic(entities.catapult5.body, false);
 
-    chickensLst = [entities.chicken1, entities.chicken2, entities.chicken3, entities.chicken4,entities.chicken5, entities.chicken6, entities.chicken7, entities.chicken8];
+    chickensLst = [entities.chicken1, entities.chicken2, entities.chicken3, entities.chicken4];
 
 
 
@@ -200,23 +178,11 @@ const Physics = (entities, { time }) => {
     Matter.Body.setStatic(entities.cage4.body, true);
     entities.cage4.refresh++;
 
-    entities.cage5.body = Matter.Bodies.rectangle(entities.cage4.body.position.x, (entities.cage4.body.position.y - spaceY), entities.cage5.wd, entities.cage5.ht, { mass: 30 });
+    entities.cage5.body = Matter.Bodies.rectangle(entities.cage1.body.position.x + spaceY, entities.cage1.body.position.y, entities.cage5.wd, entities.cage5.ht, { mass: 30 });
     cage5Body = entities.cage5.body;
     entities.cage5.body.isSensor = true;
     Matter.Body.setStatic(entities.cage5.body, true);
     entities.cage5.refresh++;
-
-    entities.cage6.body = Matter.Bodies.rectangle(entities.cage5.body.position.x, (entities.cage5.body.position.y - spaceY), entities.cage6.wd, entities.cage6.ht, { mass: 30 });
-    cage6Body = entities.cage6.body;
-    entities.cage6.body.isSensor = true;
-    Matter.Body.setStatic(entities.cage6.body, true);
-    entities.cage6.refresh++;
-
-    entities.cage7.body = Matter.Bodies.rectangle(entities.cage1.body.position.x + spaceY, entities.cage1.body.position.y, entities.cage7.wd, entities.cage7.ht, { mass: 30 });
-    cage7Body = entities.cage7.body;
-    entities.cage7.body.isSensor = true;
-    Matter.Body.setStatic(entities.cage7.body, true);
-    entities.cage7.refresh++;
 
 
     // an example of using collisionActive event on an engine
@@ -242,9 +208,7 @@ const Physics = (entities, { time }) => {
       entities.cage2.body,
       entities.cage3.body,
       entities.cage4.body,
-      entities.cage5.body,
-      entities.cage6.body,
-      entities.cage7.body
+      entities.cage5.body
     ]);
 
     resetCatapult();
@@ -273,11 +237,6 @@ const Physics = (entities, { time }) => {
   entities.chicken2.refresh++;
   entities.chicken3.refresh++;
   entities.chicken4.refresh++;
-
-  entities.chicken5.refresh++;
-  entities.chicken6.refresh++;
-  entities.chicken7.refresh++;
-  entities.chicken8.refresh++;
 
   entities.chicken99.refresh++;
 
@@ -323,7 +282,6 @@ function explodeCage(cageBody, cageEnt, explEnt) {
   Matter.Body.setPosition(cageBody, { x: -1000, y: -1000 });
   Matter.Body.setStatic(cageBody, true);
   Matter.Composite.remove(wrld1, cageBody, false);
-  opencagesCount++;
   cageEnt.refresh++;
 
 }
@@ -332,7 +290,7 @@ function removeChicken() {
   if (goingChicken) {
     Matter.Body.setPosition(goingChicken.body, { x: -1000, y: -1000 });
     Matter.Sleeping.set(goingChicken.body, true);
-    Matter.Composite.remove(wrld1, goingChicken.body, false);
+    Matter.Composite.remove(wrld1, goingChicken, false);
     goingChicken.refresh++;
     goingChicken = null;
   }
@@ -366,16 +324,6 @@ function gotCollision(event) {
       console.log("Collission555555555555555555555555");
       resetCatapult();
       explodeCage(cage5Body, entities0.cage5, entities0.expl5);
-    }
-    if (pairs[i].bodyA == ballBody && pairs[i].bodyB == cage6Body) {
-      console.log("Collission66666666666666");
-      resetCatapult();
-      explodeCage(cage6Body, entities0.cage6, entities0.expl6);
-    }
-    if (pairs[i].bodyA == ballBody && pairs[i].bodyB == cage7Body) {
-      console.log("Collission7777777777777777777777777");
-      resetCatapult();
-      explodeCage(cage7Body, entities0.cage7, entities0.expl7);
     }
   }
 
