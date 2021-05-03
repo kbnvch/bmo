@@ -23,6 +23,17 @@ const wallImage = Variables.WallImage;
 const roofImage = Variables.RoofImage;
 const cageImage = Variables.CageImage;
 
+const chickenImage1 = Variables.ChickenImage1;
+const chickenImage2 = Variables.ChickenImage2;
+const chickenImage3 = Variables.ChickenImage3;
+const chickenImage4 = Variables.ChickenImage4;
+const chickenImage5 = Variables.ChickenImage5;
+const chickenImage6 = Variables.ChickenImage6;
+const chickenImage7 = Variables.ChickenImage7;
+const chickenImage8 = Variables.ChickenImage8;
+const chickenImage9 = Variables.ChickenImage9;
+const chickenImage10 = Variables.ChickenImage10;
+
 const backgroundImage = Variables.BackgroundImage;
 const emptyArrowImage = Variables.EmptyArrowImage;
 const exp1 = Variables.BalloonExplodingImage;
@@ -112,7 +123,7 @@ const pillarHeight = pillarwidth * pillarProportion;//rnb1Image
 
 const margin = ScreenData.margin;
 const arrProportion = Image.resolveAssetSource(arrowImage).height / Image.resolveAssetSource(arrowImage).width;
-const arrWdt = (rnb1width / 3.5);
+const arrWdt = (rnb1width / 4.6);
 const arrHeight = arrWdt * arrProportion;
 const topP = HEIGHT - arrHeight - arrHeight / 10;
 
@@ -218,14 +229,16 @@ export default class Chickens extends PureComponent {
               
              
              */
-            chicken1: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken2: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken3: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken4: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken5: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken6: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken7: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken8: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: arrowImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken1: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage1, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken2: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage2, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken3: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage3, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken4: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage4, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken5: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage5, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken6: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage6, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken7: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage7, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken8: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage8, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken9: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage9, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken10: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage10, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
 
 
 
@@ -240,6 +253,9 @@ export default class Chickens extends PureComponent {
             cage5: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
             cage6: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
             cage7: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage8: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage9: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage10: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
 
             expl1: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
             expl2: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
@@ -248,6 +264,9 @@ export default class Chickens extends PureComponent {
             expl5: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
             expl6: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
             expl7: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl8: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl9: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl10: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
 
 
             chicken99: { body: undefined, wd: arrWdt, ht: arrHeight, theImage: boxImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },

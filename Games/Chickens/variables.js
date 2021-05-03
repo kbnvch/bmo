@@ -23,6 +23,17 @@ const Variables = {
   RoofImage: require("./pics/roof1.png"),//
   CageImage: require("./pics/cage01.png"),
 
+  ChickenImage1: require("./pics/chicken1.png"),
+  ChickenImage2: require("./pics/chicken2.png"),
+  ChickenImage3: require("./pics/chicken3.png"),
+  ChickenImage4: require("./pics/chicken4.png"),
+  ChickenImage5: require("./pics/chicken5.png"),
+  ChickenImage6: require("./pics/chicken6.png"),
+  ChickenImage7: require("./pics/chicken7.png"),
+  ChickenImage8: require("./pics/chicken8.png"),
+  ChickenImage9: require("./pics/chicken9.png"),
+  ChickenImage10: require("./pics/chicken10.png"),
+
   EmptyArrowImage: require("./pics/arrow_empty.png"),
   BalloonImage: require("./pics/balloon.png"),
   BackgroundImage: require("./pics/background.png"),
