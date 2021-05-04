@@ -25,14 +25,21 @@ var cage7Body;
 var cage8Body;
 var cage9Body;
 var cage10Body;
-var spcBody;
-var spcBody2;
 var ballBody;
+var ballPos;
 
 var goingChicken;
 var openCageCount = 0;
 var chickenUsedCount = 0;
-var runBallTesting = false;
+var ballIsGoing = false;
+
+
+var currentDots;
+var currentCage;
+var nextPoint;
+var pointNr;
+var dirV;
+var chickenEnts;
 
 
 
@@ -40,13 +47,13 @@ const GameLoop = (entities, { touches }) => {
   if (stopGame) {
     return entities;
   }
-  if (resetCatpl) {
+  if (resetCatpl && goForce == false) {
     resetCatapult();
     cnt1++;
     if (cnt1 > 6) {
       cnt1 = 0;
       resetCatpl = false;
-      Matter.Body.applyForce(entities.ball7.body, entities.ball7.body.position, { x: 0, y: 0.001 });
+      // Matter.Body.applyForce(entities.ball7.body, entities.ball7.body.position, { x: 0, y: 0.001 });
     }
     return entities;
   }
@@ -56,37 +63,65 @@ const GameLoop = (entities, { touches }) => {
       if (chickensLst[index].went == false && checkTouch(press.event.pageX, press.event.pageY, chickensLst[index])) {
         chickensLst[index].went = true;
         xDrop = entities.store.wd - (chickensLst[index].wd / 2);
-        yDrop = chickensLst[index].ht / 2;
+        yDrop = (chickensLst[index].ht / 2 + entities.roof1.HEIGHT / 2) + 1;
         Matter.Body.setPosition(chickensLst[index].body, { x: xDrop, y: yDrop });
         Matter.Sleeping.set(chickensLst[index].body, false);
         Matter.Composite.add(wrld1, chickensLst[index].body);
         goingChicken = chickensLst[index];
+        currentDots = chickensLst[index].path;
+        currentCage = chickensLst[index].cage;
         goForce = true;
+        resetCatpl = false;
         chickensLst[index].refresh++;
-        console.log("touched: " + index + " " + press.event.pageX + "," + press.event.pageY);
+        entities.dots11.dots =[];
+        entities.dots11.refresh++;
         return entities;
       }
     }
     return entities;
   }
 
-  if (goForce && entities.ball7.body.position.y < shY) {
-    console.log("force applied")
-    let velX = (entities.ball7.body.velocity.y) / 5;
-    let velY = (entities.ball7.body.velocity.y);
-    //Matter.Body.applyForce(entities.ball7.body, entities.ball7.body.position, {x:-0.01,y:0});
-    Matter.Body.setVelocity(entities.ball7.body, { x: velX, y: velY })
+  if (goForce && (entities.ball7.body.position.y < shY)) {
+
+    pointNr = 1;
+    changeToNextWaypooint();
+    ballIsGoing = true;
     goForce = false;
     removeChicken();
     return entities;
   }
-  if (runBallTesting) {
-    if (entities.ball7.body.speed < 0.01) {
-      runBallTesting = false;
-      ballDidNotHit();
-    }
+
+  if (ballIsGoing) {
+    changeToNextWaypooint();
+
+    entities.dots11.dots.push({ x: entities.ball7.body.position.x, y: entities.ball7.body.position.y });
+    entities.dots11.refresh++;
+    return entities;
   }
   return entities;
+}
+
+
+function changeToNextWaypooint() {
+  console.log("change next waypoint  ");
+  Matter.Body.setPosition(entities0.ball7.body, currentDots[pointNr - 1]);
+  dirV = Matter.Vector.sub(currentDots[pointNr], currentDots[pointNr - 1]);
+  console.log("applying vel  " + dirV.x + " , " + dirV.y + "  to: " + entities0.ball7.body);
+  Matter.Body.translate(entities0.ball7.body, dirV);
+  console.log("current body vel:  " + entities0.ball7.body.ve);
+  pointNr++;
+  if (pointNr > currentDots.length - 1) {
+    console.log("will reach last wayppoint!! stopping");
+    resetDots();
+    resetCatapult();
+    explodeCage(currentCage.body, currentCage, entities0.expl7);
+  }
+}
+
+function resetDots() {
+  ballIsGoing = false;
+  pointNr = 0;
+  dirV = { x: 0, y: 0 };
 }
 
 
@@ -96,6 +131,7 @@ const Physics = (entities, { time }) => {
     engine = Matter.Engine.create({ enableSleeping: true });
     wrld1 = engine.world;
     entities0 = entities;
+    chickenEnts = [entities.chicken1,entities.chicken2,entities.chicken3,entities.chicken4,entities.chicken5,entities.chicken6,entities.chicken7,entities.chicken8,entities.chicken9,entities.chicken10];
     let wd = entities.chicken1.wd;
     let ht = entities.chicken1.ht;
 
@@ -104,47 +140,47 @@ const Physics = (entities, { time }) => {
 
     wrld1.gravity.y = 0.1;
 
-    entities.chicken1.body = Matter.Bodies.rectangle(stX + (wd * 0), stY, wd, ht, { mass: 15 });
-    Matter.Sleeping.set(entities.chicken1.body, true);
+    chickenEnts[0].body = Matter.Bodies.rectangle(stX + (wd * 0), stY, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[0].body, true);
     //Matter.World.add(wrld1, entities.chicken1.body);
 
-    entities.chicken2.body = Matter.Bodies.rectangle(stX + (wd * 1) + 1, stY - wd * 0.45, wd, ht, { mass: 18 });
-    Matter.Sleeping.set(entities.chicken2.body, true);
+    chickenEnts[1].body = Matter.Bodies.rectangle(stX + (wd * 1) + 1, stY - wd * 0.45, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[1].body, true);
     //Matter.World.add(wrld1, entities.chicken2.body);
 
-    entities.chicken9.body = Matter.Bodies.rectangle(stX + (wd * 2) + 1, stY - wd * 0.65, wd, ht, { mass: 18 });
-    Matter.Sleeping.set(entities.chicken2.body, true);
+    chickenEnts[2].body = Matter.Bodies.rectangle(stX + (wd * 2) + 1, stY - wd * 0.65, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[2].body, true);
     //Matter.World.add(wrld1, entities.chicken2.body);
 
-    entities.chicken3.body = Matter.Bodies.rectangle(stX + (wd * 3) + 2, stY - wd * 0.45, wd, ht, { mass: 21 });
-    Matter.Sleeping.set(entities.chicken3.body, true);
+    chickenEnts[3].body = Matter.Bodies.rectangle(stX + (wd * 3) + 2, stY - wd * 0.45, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[3].body, true);
     //Matter.World.add(wrld1, entities.chicken3.body);
 
-    entities.chicken4.body = Matter.Bodies.rectangle(stX + (wd * 4) + 3, stY, wd, ht, { mass: 24 });
-    Matter.Sleeping.set(entities.chicken4.body, true);
+    chickenEnts[4].body = Matter.Bodies.rectangle(stX + (wd * 4) + 3, stY, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[4].body, true);
     //Matter.World.add(wrld1, entities.chicken4.body);
 
     let st2X = entities.rnb2.posX;
     let st2Y = entities.rnb2.posY;
 
-    entities.chicken5.body = Matter.Bodies.rectangle(st2X + (wd * 0), st2Y, wd, ht, { mass: 27 });
-    Matter.Sleeping.set(entities.chicken5.body, true);
+    chickenEnts[5].body = Matter.Bodies.rectangle(st2X + (wd * 0), st2Y, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[5].body, true);
     //Matter.World.add(wrld1, entities.chicken1.body);
 
-    entities.chicken6.body = Matter.Bodies.rectangle(st2X + (wd * 1) + 1, st2Y - wd * 0.45, wd, ht, { mass: 30 });
-    Matter.Sleeping.set(entities.chicken6.body, true);
+    chickenEnts[6].body = Matter.Bodies.rectangle(st2X + (wd * 1) + 1, st2Y - wd * 0.45, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[6].body, true);
     //Matter.World.add(wrld1, entities.chicken2.body);
 
-    entities.chicken10.body = Matter.Bodies.rectangle(st2X + (wd * 2) + 1, st2Y - wd * 0.65, wd, ht, { mass: 30 });
-    Matter.Sleeping.set(entities.chicken10.body, true);
+    chickenEnts[7].body = Matter.Bodies.rectangle(st2X + (wd * 2) + 1, st2Y - wd * 0.65, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[7].body, true);
     //Matter.World.add(wrld1, entities.chicken2.body);
 
-    entities.chicken7.body = Matter.Bodies.rectangle(st2X + (wd * 3) + 2, st2Y - wd * 0.45, wd, ht, { mass: 33 });
-    Matter.Sleeping.set(entities.chicken7.body, true);
+    chickenEnts[8].body = Matter.Bodies.rectangle(st2X + (wd * 3) + 2, st2Y - wd * 0.45, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[8].body, true);
     //Matter.World.add(wrld1, entities.chicken3.body);
 
-    entities.chicken8.body = Matter.Bodies.rectangle(st2X + (wd * 4) + 3, st2Y, wd, ht, { mass: 36 });
-    Matter.Sleeping.set(entities.chicken8.body, true);
+    chickenEnts[9].body = Matter.Bodies.rectangle(st2X + (wd * 4) + 3, st2Y, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[9].body, true);
     //Matter.World.add(wrld1, entities.chicken4.body);
 
 
@@ -157,6 +193,8 @@ const Physics = (entities, { time }) => {
     entities.chicken6.refresh++;
     entities.chicken7.refresh++;
     entities.chicken8.refresh++;
+    entities.chicken9.refresh++;
+    entities.chicken10.refresh++;
 
 
 
@@ -164,7 +202,7 @@ const Physics = (entities, { time }) => {
     let pY0 = entities.ground1.posY - (entities.stand6.HEIGHT - entities.stand6.WIDTH / 4);
     let pX0 = entities.store.wd - entities.catapult5.wd / 2;
 
-    entities.catapult5.body = Matter.Bodies.rectangle(pX0, pY0, entities.catapult5.wd, entities.catapult5.ht, { friction:1,collisionFilter: { group: group0 }, mass: 200 });
+    entities.catapult5.body = Matter.Bodies.rectangle(pX0, pY0, entities.catapult5.wd, entities.catapult5.ht, { friction: 1, collisionFilter: { group: group0 }, mass: 200 });
     catapultBd = entities.catapult5.body;
     Matter.Body.setStatic(entities.catapult5.body, false);
 
@@ -194,7 +232,12 @@ const Physics = (entities, { time }) => {
 
     let bcX = entities.chicken99.body.position.x + (entities.chicken99.wd / 2) + (entities.ball7.wd / 2) + 2;
     let bcY = entities.chicken99.body.position.y - (entities.chicken99.ht / 2) - (entities.ball7.wd / 2) - 2;
-    entities.ball7.body = Matter.Bodies.circle(bcX, bcY, entities.ball7.wd / 2, { mass: 2 });
+    // ddx=0.7822501819531037
+    //  ppy=2.4339170070954266
+    ballPos = { x: 0, y: 0 };
+    ballPos.x = entities.chicken99.body.position.x + entities.chicken99.wd * 0.78225;
+    ballPos.y = entities.chicken99.body.position.y - entities.chicken99.wd * 2.433917;
+    entities.ball7.body = Matter.Bodies.circle(bcX, bcY, entities.ball7.wd / 2, { frictionAir: 0, mass: 2 });
     ballBody = entities.ball7.body;
     shY = entities.ground1.posY - entities.stand6.HEIGHT * 1.83;
 
@@ -207,8 +250,8 @@ const Physics = (entities, { time }) => {
     Matter.Body.setStatic(entities.cage1.body, true);
     entities.cage1.refresh++;
 
-    let remainHt= entities.store.ht-(entities.cage1.ht*9)-entities.ground1.HEIGHT-(entities.roof1.HEIGHT);
-    let spaceY = entities.cage1.ht+(remainHt / 8) ;
+    let remainHt = entities.store.ht - (entities.cage1.ht * 9) - entities.ground1.HEIGHT - (entities.roof1.HEIGHT);
+    let spaceY = entities.cage1.ht + (remainHt / 8);
 
     entities.cage2.body = Matter.Bodies.rectangle(entities.cage1.body.position.x, (entities.cage1.body.position.y - spaceY), entities.cage2.wd, entities.cage2.ht, { collisionFilter: { group: group0 }, mass: 30 });
     cage2Body = entities.cage2.body;
@@ -267,45 +310,15 @@ const Physics = (entities, { time }) => {
     entities.cage9.refresh++;
 
 
-    let deltaA = (entities.chicken99.body.position.x-entities.chicken99.wd/2)-(entities.cage1.body.position.x+entities.cage1.wd/2);//entities.cage1.wd+(remainHt / 8) ;
-    deltaA=deltaA*0.85;
-
-    entities.cage1.body.position.x=entities.cage1.body.position.x+entities.cage1.body.position.x;
-
     entities.cage10.body = Matter.Bodies.rectangle(entities.cage1.body.position.x + spaceY, entities.cage1.body.position.y, entities.cage10.wd, entities.cage10.ht, { collisionFilter: { group: group0 }, mass: 30 });
     cage10Body = entities.cage10.body;
     // entities.cage7.body.collisionFilter={group: (-1)};
     entities.cage10.body.isSensor = true;
     Matter.Body.setStatic(entities.cage10.body, true);
+    entities.cage1.refresh++;
     entities.cage10.refresh++;
 
 
-    // an example of using collisionActive event on an engine
-    Matter.Events.on(engine, 'collisionStart', function (event) {
-      gotCollision(event);
-    });
-
-
-
-
-    var spcWd = entities.store.wd;
-    var spcHt = 5;
-    var spcX = (entities.store.wd / 2);
-    var spcY = entities.ground1.posY - 2;
-    spcBody = Matter.Bodies.rectangle(spcX, spcY, spcWd, spcHt, { collisionFilter: { group: group0 } });
-    spcBody.isSensor = true;
-    Matter.Body.setStatic(spcBody, true);
-
-    spcWd = entities.chicken99.wd * 0.8;
-    spcHt = 5;
-    spcX = entities.chicken99.body.position.x;
-    spcY = entities.chicken99.body.position.y - (entities.chicken99.ht / 2) - 2.5;
-    spcBody2 = Matter.Bodies.rectangle(spcX, spcY, spcWd, spcHt, { collisionFilter: { group: group0 } });
-    spcBody2.isSensor = true;
-    Matter.Body.setStatic(spcBody2, true);
-
-
-    //Matter.World.add(wrld1, entities.chicken4.body);
 
 
 
@@ -324,9 +337,7 @@ const Physics = (entities, { time }) => {
       entities.cage7.body,
       entities.cage8.body,
       entities.cage9.body,
-      entities.cage10.body,
-      spcBody,
-      spcBody2
+      entities.cage10.body
     ]);
 
     resetCatapult();
@@ -347,6 +358,10 @@ const Physics = (entities, { time }) => {
     Matter.Engine.run(engine);
 
     da = false;
+
+    drawTheDots();
+
+
     return entities;
   }
 
@@ -364,6 +379,94 @@ const Physics = (entities, { time }) => {
   return entities;
 };
 
+function drawTheDots() {
+
+  var A1 = Matter.Vector.clone(entities0.cage1.body.position);
+  var A2 = Matter.Vector.clone(entities0.cage2.body.position);
+  var A3 = Matter.Vector.clone(entities0.cage3.body.position);
+  var A4 = Matter.Vector.clone(entities0.cage4.body.position);
+  var A5 = Matter.Vector.clone(entities0.cage5.body.position);
+  var A6 = Matter.Vector.clone(entities0.cage6.body.position);
+  var A7 = Matter.Vector.clone(entities0.cage7.body.position);
+  var A8 = Matter.Vector.clone(entities0.cage8.body.position);
+  var A9 = Matter.Vector.clone(entities0.cage9.body.position);
+  var A10 = Matter.Vector.clone(entities0.cage10.body.position);
+
+  A1.x = (A1.x + entities0.cage1.wd / 2);
+  A1.y = (A1.y - entities0.cage1.ht / 2);
+
+  A2.x = (A2.x + entities0.cage2.wd / 2);
+  A3.x = (A3.x + entities0.cage3.wd / 2);
+  A4.x = (A4.x + entities0.cage4.wd / 2);
+  A5.x = (A5.x + entities0.cage5.wd / 2);
+  A6.x = (A6.x + entities0.cage6.wd / 2);
+  A7.x = (A7.x + entities0.cage7.wd / 2);
+  A8.x = (A8.x + entities0.cage8.wd / 2);
+  A9.x = (A9.x + entities0.cage9.wd / 2);
+
+ // A10.y = (A10.y - entities0.cage10.ht / 2);
+
+  const B = Matter.Vector.clone(ballPos);
+  let di = 34;
+  var d1 = { x: (A1.x - B.x) / di, y: (A1.y - B.y) / di };
+  var d2 = { x: (A2.x - B.x) / di, y: (A2.y - B.y) / di };
+  var d3 = { x: (A3.x - B.x) / di, y: (A3.y - B.y) / di };
+  var d4 = { x: (A4.x - B.x) / di, y: (A4.y - B.y) / di };
+  var d5 = { x: (A5.x - B.x) / di, y: (A5.y - B.y) / di };
+  var d6 = { x: (A6.x - B.x) / di, y: (A6.y - B.y) / di };
+  var d7 = { x: (A7.x - B.x) / di, y: (A7.y - B.y) / di };
+  var d8 = { x: (A8.x - B.x) / di, y: (A8.y - B.y) / di };
+  var d9 = { x: (A9.x - B.x) / di, y: (A9.y - B.y) / di };
+  var d10 = { x: (A10.x - B.x) / di, y: (A10.y - B.y) / di };
+
+
+  entities0.chicken1.path =  getDots(B, d10,di);
+  entities0.chicken2.path =  getDots(B, d1,di);
+  entities0.chicken3.path =  getDots(B, d2,di);
+  entities0.chicken4.path =  getDots(B, d3,di);
+  entities0.chicken5.path =  getDots(B, d4,di);
+  entities0.chicken6.path =  getDots(B, d5,di);
+  entities0.chicken7.path =  getDots(B, d6,di);
+  entities0.chicken8.path =  getDots(B, d7,di);
+  entities0.chicken9.path =  getDots(B, d8,di);
+  entities0.chicken10.path = getDots(B, d9,di);
+
+  entities0.chicken1.cage =  entities0.cage10;
+  entities0.chicken2.cage =  entities0.cage1;
+  entities0.chicken3.cage =  entities0.cage2;
+  entities0.chicken4.cage =  entities0.cage3;
+  entities0.chicken5.cage =  entities0.cage4;
+  entities0.chicken6.cage =  entities0.cage5;
+  entities0.chicken7.cage =  entities0.cage6;
+  entities0.chicken8.cage =  entities0.cage7;
+  entities0.chicken9.cage =  entities0.cage8;
+  entities0.chicken10.cage = entities0.cage9;
+}
+
+function getDots(pointA, delta, di) {
+  let points = [];
+  let v1 = pointA;
+  points.push(v1);
+
+  for (let i = 0; i < di - 1; i++) {
+    let vt = Matter.Vector.add(points[i], delta);
+    points.push(vt);
+  }
+  return applySine(points, entities0.cage1.ht * 2);
+}
+
+function applySine(points, dist) {
+
+  let dt = Math.PI / (points.length - 1);
+  let st = 0;
+  for (let index = 0; index < points.length; index++) {
+    points[index].y = points[index].y - (Math.sin(st) * dist);
+    st = st + dt;
+  }
+  return points;
+}
+
+
 
 var x1, y1, x2, y2;
 function checkTouch(x, y, entity) {
@@ -378,6 +481,10 @@ function checkTouch(x, y, entity) {
   return false;
 }
 function resetCatapult() {
+  entities0.dots11.dots=[];
+  entities0.dots11.refresh++;
+  resetDots();
+  ballIsGoing = false;
   Matter.Body.setAngle(catapultBd, -0.283);
   Matter.Body.setAngularVelocity(catapultBd, 0);
   let bcX = entities0.chicken99.body.position.x + (entities0.chicken99.wd / 2) + (entities0.ball7.wd / 2) + 2;
@@ -392,7 +499,7 @@ function resetCatapult() {
 }
 
 function explodeCage(cageBody, cageEnt, explEnt) {
-  runBallTesting = false;
+
   explEnt.posX = (cageBody.position.x - (explEnt.WIDTH / 2));
   explEnt.posY = (cageBody.position.y - (explEnt.HEIGHT / 2));
   cageBody.isSensor = false;
@@ -404,13 +511,6 @@ function explodeCage(cageBody, cageEnt, explEnt) {
   if (openCageCount == 5) {
     endGame(false);
   } else if (chickenUsedCount == 8) {
-    endGame(true);
-  }
-}
-
-function ballDidNotHit() {
-  resetCatapult();
-  if (chickenUsedCount == 8) {
     endGame(true);
   }
 }
@@ -440,71 +540,6 @@ function removeChicken() {
     goingChicken.refresh++;
     goingChicken = entities0.store;
   }
-}
-
-function gotCollision(event) {
-  var pairs = event.pairs;
-  console.log("colission detected!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-  for (var i = 0; i < pairs.length; i++) {
-    if (pairs[i].bodyA == ballBody && pairs[i].bodyB == cage1Body) {
-      console.log("Collission1111111111");
-      resetCatapult();
-      explodeCage(cage1Body, entities0.cage1, entities0.expl1);
-    }
-    if (pairs[i].bodyA == ballBody && pairs[i].bodyB == cage2Body) {
-      console.log("Collission222222222");
-      resetCatapult();
-      explodeCage(cage2Body, entities0.cage2, entities0.expl2);
-    }
-    if (pairs[i].bodyA == ballBody && pairs[i].bodyB == cage3Body) {
-      console.log("Collission333333333");
-      resetCatapult();
-      explodeCage(cage3Body, entities0.cage3, entities0.expl3);
-    }
-    if (pairs[i].bodyA == ballBody && pairs[i].bodyB == cage4Body) {
-      console.log("Collission44444444444444");
-      resetCatapult();
-      explodeCage(cage4Body, entities0.cage4, entities0.expl4);
-    }
-    if (pairs[i].bodyA == ballBody && pairs[i].bodyB == cage5Body) {
-      console.log("Collission555555555555555555555555");
-      resetCatapult();
-      explodeCage(cage5Body, entities0.cage5, entities0.expl5);
-    }
-    if (pairs[i].bodyA == ballBody && pairs[i].bodyB == cage6Body) {
-      console.log("Collission66666666666666");
-      resetCatapult();
-      explodeCage(cage6Body, entities0.cage6, entities0.expl6);
-    }
-    if (pairs[i].bodyA == ballBody && pairs[i].bodyB == cage7Body) {
-      console.log("Collission7777777777777777777");
-      resetCatapult();
-      explodeCage(cage7Body, entities0.cage7, entities0.expl7);
-    }
-    if (pairs[i].bodyA == ballBody && pairs[i].bodyB == cage8Body) {
-      console.log("Collission888888888888888888888");
-      resetCatapult();
-      explodeCage(cage8Body, entities0.cage8, entities0.expl7);
-    }
-    if (pairs[i].bodyA == ballBody && pairs[i].bodyB == cage9Body) {
-      console.log("Collission99999999999999999999");
-      resetCatapult();
-      explodeCage(cage9Body, entities0.cage9, entities0.expl7);
-    }
-    if (pairs[i].bodyA == ballBody && pairs[i].bodyB == cage10Body) {
-      console.log("Collission101010101010101010101010");
-      resetCatapult();
-      explodeCage(cage10Body, entities0.cage10, entities0.expl7);
-    }
-    if (pairs[i].bodyA == ballBody && (pairs[i].bodyB == spcBody || pairs[i].bodyB == spcBody2)) {
-      console.log("CollissionSPCSPCSPCSPC");
-      //resetCatapult();
-      //ballDidNotHit();
-      runBallTesting = true;
-    }
-  }
-
-
 }
 
 var boxGo = false;
@@ -612,13 +647,12 @@ export function resetSys() {
   cage8Body = undefined;
   cage9Body = undefined;
   cage10Body = undefined;
-  spcBody = undefined;
+
   ballBody = undefined;
 
   goingChicken = undefined;
   openCageCount = 0;
   chickenUsedCount = 0;
-  runBallTesting = false;
 
   boxGo = false;
   sp = 19;

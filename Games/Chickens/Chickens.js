@@ -52,7 +52,7 @@ import { Rend4 } from "./renderers";
 import { RendZ } from "./renderers";
 //import { Rend2 } from "./renderers";
 //import { Rend1 } from "./renderers";
-//import { Circle1 } from "./renderers";
+import { Circle1 } from "./renderers";
 import { PrizeBox1 } from "./renderers";
 //import { UpdLoop } from "./systems"
 //import { UpdateLoop } from "./systems"
@@ -188,7 +188,186 @@ export default class Chickens extends PureComponent {
       getPrizesWin(winingImageNr);
     }
     console.log("   " + przNrs);
-    console.log("rnb1width value: "+rnb1width);
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    console.log("random 2 max: "+getRandom(2));
+    
 
   }
   componentWillUnmount() {
@@ -229,16 +408,18 @@ export default class Chickens extends PureComponent {
               
              
              */
-            chicken1: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage1, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken2: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage2, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken3: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage3, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken4: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage4, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken5: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage5, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken6: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage6, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken7: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage7, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken8: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage8, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken9: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage9, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken10: { went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage10, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken1: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage1, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken2: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage2, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken3: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage3, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken4: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage4, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken5: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage5, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken6: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage6, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken7: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage7, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken8: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage8, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken9: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage9, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken10:{ path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage10, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+
+   
 
 
 
@@ -279,6 +460,8 @@ export default class Chickens extends PureComponent {
             pr1: { posX: -1000, posY: -1000, WIDTH: cageWidth, HEIGHT: cageHeight, rImg: cageImage, renderer: <RendZ /> },
             pr2: { posX: -1000, posY: -1000, WIDTH: cageWidth, HEIGHT: cageHeight, rImg: cageImage, renderer: <RendZ /> },
             pr3: { posX: -1000, posY: -1000, WIDTH: cageWidth, HEIGHT: cageHeight, rImg: cageImage, renderer: <RendZ /> },
+
+            dots11: { dots: [],refresh: 0, color:"rgba(1, 0, 158, 1.0)",renderer: <Circle1 /> },
 
           }}>
 
@@ -553,6 +736,15 @@ function getRandomButNot(max, nr) {
   }
   return n;
 }
+
+function getRandomSortedList(nrOfMembers){
+
+
+
+
+
+}
+
 
 function getRandom(max) {
   return Math.floor(Math.random() * Math.floor(max));

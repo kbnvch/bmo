@@ -3,14 +3,13 @@ import { StyleSheet,Text, View,Image } from "react-native";
 
 class Circle1 extends PureComponent {
   render() {
-    const x =this.props.posX;
-    const pi = this.props.pi;
+    const refresh = this.props.refresh;
     const dots = this.props.dots;
-    var cc=0;
+    const color0 = this.props.color;
     return (
       
      // <View style={[styles.circle, { left: 0-2, top: 0 }]} />
-      dots.map((n, key) => (<View key={key} style={[styles.circle, { left: x, top: n , borderColor: "rgba(158, 0, 0, 1.0)"}]} />))
+      dots.map((n, key) => (<View key={key} style={[styles.circle, { left: n.x, top: n.y , borderColor: color0}]} />))
      // houses.map((n, key) => (<Image source={n.houseImageSource} key={key} style={[styles.house1, { width: boxysize, height: boxysize, left: n.left, top: n.top }]} />))
     );
   }
@@ -192,3 +191,4 @@ export { TheBackground };
 export { Rend4 };
 export { RendZ };
 export {PrizeBox1};
+export {Circle1};
