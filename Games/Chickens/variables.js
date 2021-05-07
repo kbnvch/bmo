@@ -21,7 +21,11 @@ const Variables = {
   BoxImage: require("./pics/box1.png"),//
   WallImage: require("./pics/wall1.png"),//
   RoofImage: require("./pics/roof1.png"),//
-  CageImage: require("./pics/cage01.png"),
+  CageImage: require("./pics/cage01.png"),//cageOpen
+  CageOpenImage: require("./pics/cageOpen.png"),//cageOpen
+  CageOpenImage10: require("./pics/cageOpen10.png"),//cageOpen
+  DisplayImage: require("./pics/display.png"),
+  BirbImage: require("./pics/birb.png"),
 
   ChickenImage1: require("./pics/chicken1.png"),
   ChickenImage2: require("./pics/chicken2.png"),

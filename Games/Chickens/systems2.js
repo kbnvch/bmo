@@ -15,16 +15,7 @@ var cnt1 = 0;
 var entities0;
 var catapultBd;
 
-var cage1Body;
-var cage2Body;
-var cage3Body;
-var cage4Body;
-var cage5Body;
-var cage6Body;
-var cage7Body;
-var cage8Body;
-var cage9Body;
-var cage10Body;
+
 var ballBody;
 var ballPos;
 
@@ -32,6 +23,7 @@ var goingChicken;
 var openCageCount = 0;
 var chickenUsedCount = 0;
 var ballIsGoing = false;
+var notAlowedToClick = false;
 
 
 var currentDots;
@@ -40,6 +32,9 @@ var nextPoint;
 var pointNr;
 var dirV;
 var chickenEnts;
+var prEnts;
+var prPoints;
+var currPrz;
 
 
 
@@ -58,7 +53,7 @@ const GameLoop = (entities, { touches }) => {
     return entities;
   }
   let press = touches.find(x => x.type === "press");
-  if (press && da == false) {
+  if (press && da == false && notAlowedToClick == false) {
     for (let index = 0; index < chickensLst.length; index++) {
       if (chickensLst[index].went == false && checkTouch(press.event.pageX, press.event.pageY, chickensLst[index])) {
         chickensLst[index].went = true;
@@ -73,8 +68,9 @@ const GameLoop = (entities, { touches }) => {
         goForce = true;
         resetCatpl = false;
         chickensLst[index].refresh++;
-        entities.dots11.dots =[];
+        entities.dots11.dots = [];
         entities.dots11.refresh++;
+        notAlowedToClick = true;
         return entities;
       }
     }
@@ -101,17 +97,44 @@ const GameLoop = (entities, { touches }) => {
   return entities;
 }
 
+function lastPrizeArrived(){
+  console.log("last arrived");
+  Matter.Composite.remove(wrld1, currPrz.body,false);
+  Matter.Body.setAngularVelocity(currPrz.body, 0);
+  Matter.Body.setAngle(currPrz.body, 0);
+  Matter.Sleeping.set(currPrz.body, true);
+  currPrz.wd=entities0.display1.prwd;
+  currPrz.ht=entities0.display1.prwd;
+  endGame();
+}
+
+
+function prizeArrived(){
+  Matter.Composite.remove(wrld1, currPrz.body,false);
+  Matter.Body.setAngularVelocity(currPrz.body, 0);
+  Matter.Body.setAngle(currPrz.body, 0);
+  Matter.Sleeping.set(currPrz.body, true);
+  currPrz.wd=entities0.display1.prwd;
+  currPrz.ht=entities0.display1.prwd;
+  allowClick();
+}
+
+function allowClick() {
+
+  notAlowedToClick = false;
+  fireAfterDelay = theFunction;
+}
+
 
 function changeToNextWaypooint() {
-  console.log("change next waypoint  ");
+
   Matter.Body.setPosition(entities0.ball7.body, currentDots[pointNr - 1]);
   dirV = Matter.Vector.sub(currentDots[pointNr], currentDots[pointNr - 1]);
-  console.log("applying vel  " + dirV.x + " , " + dirV.y + "  to: " + entities0.ball7.body);
   Matter.Body.translate(entities0.ball7.body, dirV);
-  console.log("current body vel:  " + entities0.ball7.body.ve);
+
   pointNr++;
   if (pointNr > currentDots.length - 1) {
-    console.log("will reach last wayppoint!! stopping");
+
     resetDots();
     resetCatapult();
     explodeCage(currentCage.body, currentCage, entities0.expl7);
@@ -131,7 +154,10 @@ const Physics = (entities, { time }) => {
     engine = Matter.Engine.create({ enableSleeping: true });
     wrld1 = engine.world;
     entities0 = entities;
-    chickenEnts = [entities.chicken1,entities.chicken2,entities.chicken3,entities.chicken4,entities.chicken5,entities.chicken6,entities.chicken7,entities.chicken8,entities.chicken9,entities.chicken10];
+    chickenEnts = [entities.chicken1, entities.chicken2, entities.chicken3, entities.chicken4, entities.chicken5, entities.chicken6, entities.chicken7, entities.chicken8, entities.chicken9, entities.chicken10];
+    prEnts = [entities.pr1, entities.pr2, entities.pr3, entities.pr4, entities.pr5];
+    prPoints = [entities.display1.pt1,entities.display1.pt2,entities.display1.pt3,entities.display1.pt4,entities.display1.pt5];
+
     let wd = entities.chicken1.wd;
     let ht = entities.chicken1.ht;
 
@@ -140,47 +166,61 @@ const Physics = (entities, { time }) => {
 
     wrld1.gravity.y = 0.1;
 
-    chickenEnts[0].body = Matter.Bodies.rectangle(stX + (wd * 0), stY, wd, ht, { mass: 15 });
-    Matter.Sleeping.set(chickenEnts[0].body, true);
+    prEnts[0].body = Matter.Bodies.rectangle(-1000, -1000, prEnts[0].wd, prEnts[0].ht, { collisionFilter: { group: group0 } });
+    Matter.Sleeping.set(prEnts[0].body, true);
+    prEnts[1].body = Matter.Bodies.rectangle(-1000, -1000, prEnts[1].wd, prEnts[1].ht, { collisionFilter: { group: group0 } });
+    Matter.Sleeping.set(prEnts[1].body, true);
+    prEnts[2].body = Matter.Bodies.rectangle(-1000, -1000, prEnts[2].wd, prEnts[2].ht, { collisionFilter: { group: group0 } });
+    Matter.Sleeping.set(prEnts[2].body, true);
+    prEnts[3].body = Matter.Bodies.rectangle(-1000, -1000, prEnts[3].wd, prEnts[3].ht, { collisionFilter: { group: group0 } });
+    Matter.Sleeping.set(prEnts[3].body, true);
+    prEnts[4].body = Matter.Bodies.rectangle(-1000, -1000, prEnts[4].wd, prEnts[4].ht, { collisionFilter: { group: group0 } });
+    Matter.Sleeping.set(prEnts[4].body, true);
+
+
+
+    let nr = entities.store.randList[0];
+    chickenEnts[nr].body = Matter.Bodies.rectangle(stX + (wd * 0), stY, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[nr].body, true);
     //Matter.World.add(wrld1, entities.chicken1.body);
-
-    chickenEnts[1].body = Matter.Bodies.rectangle(stX + (wd * 1) + 1, stY - wd * 0.45, wd, ht, { mass: 15 });
-    Matter.Sleeping.set(chickenEnts[1].body, true);
+    nr = entities.store.randList[1];
+    chickenEnts[nr].body = Matter.Bodies.rectangle(stX + (wd * 1) + 1, stY - wd * 0.45, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[nr].body, true);
     //Matter.World.add(wrld1, entities.chicken2.body);
-
-    chickenEnts[2].body = Matter.Bodies.rectangle(stX + (wd * 2) + 1, stY - wd * 0.65, wd, ht, { mass: 15 });
-    Matter.Sleeping.set(chickenEnts[2].body, true);
+    nr = entities.store.randList[2];
+    chickenEnts[nr].body = Matter.Bodies.rectangle(stX + (wd * 2) + 1, stY - wd * 0.65, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[nr].body, true);
     //Matter.World.add(wrld1, entities.chicken2.body);
-
-    chickenEnts[3].body = Matter.Bodies.rectangle(stX + (wd * 3) + 2, stY - wd * 0.45, wd, ht, { mass: 15 });
-    Matter.Sleeping.set(chickenEnts[3].body, true);
+    nr = entities.store.randList[3];
+    chickenEnts[nr].body = Matter.Bodies.rectangle(stX + (wd * 3) + 2, stY - wd * 0.45, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[nr].body, true);
     //Matter.World.add(wrld1, entities.chicken3.body);
-
-    chickenEnts[4].body = Matter.Bodies.rectangle(stX + (wd * 4) + 3, stY, wd, ht, { mass: 15 });
-    Matter.Sleeping.set(chickenEnts[4].body, true);
+    nr = entities.store.randList[4];
+    chickenEnts[nr].body = Matter.Bodies.rectangle(stX + (wd * 4) + 3, stY, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[nr].body, true);
     //Matter.World.add(wrld1, entities.chicken4.body);
 
     let st2X = entities.rnb2.posX;
     let st2Y = entities.rnb2.posY;
-
-    chickenEnts[5].body = Matter.Bodies.rectangle(st2X + (wd * 0), st2Y, wd, ht, { mass: 15 });
-    Matter.Sleeping.set(chickenEnts[5].body, true);
+    nr = entities.store.randList[5];
+    chickenEnts[nr].body = Matter.Bodies.rectangle(st2X + (wd * 0), st2Y, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[nr].body, true);
     //Matter.World.add(wrld1, entities.chicken1.body);
-
-    chickenEnts[6].body = Matter.Bodies.rectangle(st2X + (wd * 1) + 1, st2Y - wd * 0.45, wd, ht, { mass: 15 });
-    Matter.Sleeping.set(chickenEnts[6].body, true);
+    nr = entities.store.randList[6];
+    chickenEnts[nr].body = Matter.Bodies.rectangle(st2X + (wd * 1) + 1, st2Y - wd * 0.45, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[nr].body, true);
     //Matter.World.add(wrld1, entities.chicken2.body);
-
-    chickenEnts[7].body = Matter.Bodies.rectangle(st2X + (wd * 2) + 1, st2Y - wd * 0.65, wd, ht, { mass: 15 });
-    Matter.Sleeping.set(chickenEnts[7].body, true);
+    nr = entities.store.randList[7];
+    chickenEnts[nr].body = Matter.Bodies.rectangle(st2X + (wd * 2) + 1, st2Y - wd * 0.65, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[nr].body, true);
     //Matter.World.add(wrld1, entities.chicken2.body);
-
-    chickenEnts[8].body = Matter.Bodies.rectangle(st2X + (wd * 3) + 2, st2Y - wd * 0.45, wd, ht, { mass: 15 });
-    Matter.Sleeping.set(chickenEnts[8].body, true);
+    nr = entities.store.randList[8];
+    chickenEnts[nr].body = Matter.Bodies.rectangle(st2X + (wd * 3) + 2, st2Y - wd * 0.45, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[nr].body, true);
     //Matter.World.add(wrld1, entities.chicken3.body);
-
-    chickenEnts[9].body = Matter.Bodies.rectangle(st2X + (wd * 4) + 3, st2Y, wd, ht, { mass: 15 });
-    Matter.Sleeping.set(chickenEnts[9].body, true);
+    nr = entities.store.randList[9];
+    chickenEnts[nr].body = Matter.Bodies.rectangle(st2X + (wd * 4) + 3, st2Y, wd, ht, { mass: 15 });
+    Matter.Sleeping.set(chickenEnts[nr].body, true);
     //Matter.World.add(wrld1, entities.chicken4.body);
 
 
@@ -244,7 +284,6 @@ const Physics = (entities, { time }) => {
     var group0 = Matter.Body.nextGroup(true);
 
     entities.cage1.body = Matter.Bodies.rectangle(entities.cage1.wd / 2, (entities.ground1.posY - (entities.cage1.ht / 2)), entities.cage1.wd, entities.cage1.ht, { collisionFilter: { group: group0 }, mass: 30 });
-    cage1Body = entities.cage1.body;
     //entities.cage1.body.collisionFilter={group: (-1)};
     entities.cage1.body.isSensor = true;
     Matter.Body.setStatic(entities.cage1.body, true);
@@ -254,64 +293,58 @@ const Physics = (entities, { time }) => {
     let spaceY = entities.cage1.ht + (remainHt / 8);
 
     entities.cage2.body = Matter.Bodies.rectangle(entities.cage1.body.position.x, (entities.cage1.body.position.y - spaceY), entities.cage2.wd, entities.cage2.ht, { collisionFilter: { group: group0 }, mass: 30 });
-    cage2Body = entities.cage2.body;
     //entities.cage2.body.collisionFilter={group: group};
     entities.cage2.body.isSensor = true;
     Matter.Body.setStatic(entities.cage2.body, true);
     entities.cage2.refresh++;
 
     entities.cage3.body = Matter.Bodies.rectangle(entities.cage2.body.position.x, (entities.cage2.body.position.y - spaceY), entities.cage3.wd, entities.cage3.ht, { collisionFilter: { group: group0 }, mass: 30 });
-    cage3Body = entities.cage3.body;
     //entities.cage3.body.collisionFilter={group: group};
     entities.cage3.body.isSensor = true;
     Matter.Body.setStatic(entities.cage3.body, true);
     entities.cage3.refresh++;
 
     entities.cage4.body = Matter.Bodies.rectangle(entities.cage3.body.position.x, (entities.cage3.body.position.y - spaceY), entities.cage4.wd, entities.cage4.ht, { collisionFilter: { group: group0 }, mass: 30 });
-    cage4Body = entities.cage4.body;
     //entities.cage4.body.collisionFilter={group: group};
     entities.cage4.body.isSensor = true;
     Matter.Body.setStatic(entities.cage4.body, true);
     entities.cage4.refresh++;
 
     entities.cage5.body = Matter.Bodies.rectangle(entities.cage4.body.position.x, (entities.cage4.body.position.y - spaceY), entities.cage5.wd, entities.cage5.ht, { collisionFilter: { group: group0 }, mass: 30 });
-    cage5Body = entities.cage5.body;
     entities.cage5.body.isSensor = true;
     //entities.cage5.body.collisionFilter={group: group};
     Matter.Body.setStatic(entities.cage5.body, true);
     entities.cage5.refresh++;
 
     entities.cage6.body = Matter.Bodies.rectangle(entities.cage5.body.position.x, (entities.cage5.body.position.y - spaceY), entities.cage6.wd, entities.cage6.ht, { collisionFilter: { group: group0 }, mass: 30 });
-    cage6Body = entities.cage6.body;
     entities.cage6.body.isSensor = true;
     //entities.cage6.body.collisionFilter={group: group};
     Matter.Body.setStatic(entities.cage6.body, true);
     entities.cage6.refresh++;
 
     entities.cage7.body = Matter.Bodies.rectangle(entities.cage6.body.position.x, (entities.cage6.body.position.y - spaceY), entities.cage7.wd, entities.cage7.ht, { collisionFilter: { group: group0 }, mass: 30 });
-    cage7Body = entities.cage7.body;
     entities.cage7.body.isSensor = true;
     //entities.cage6.body.collisionFilter={group: group};
     Matter.Body.setStatic(entities.cage7.body, true);
     entities.cage7.refresh++;
 
     entities.cage8.body = Matter.Bodies.rectangle(entities.cage7.body.position.x, (entities.cage7.body.position.y - spaceY), entities.cage8.wd, entities.cage8.ht, { collisionFilter: { group: group0 }, mass: 30 });
-    cage8Body = entities.cage8.body;
     entities.cage8.body.isSensor = true;
     //entities.cage6.body.collisionFilter={group: group};
     Matter.Body.setStatic(entities.cage8.body, true);
     entities.cage8.refresh++;
 
     entities.cage9.body = Matter.Bodies.rectangle(entities.cage8.body.position.x, (entities.cage8.body.position.y - spaceY), entities.cage9.wd, entities.cage9.ht, { collisionFilter: { group: group0 }, mass: 30 });
-    cage9Body = entities.cage9.body;
     entities.cage9.body.isSensor = true;
     //entities.cage6.body.collisionFilter={group: group};
     Matter.Body.setStatic(entities.cage9.body, true);
     entities.cage9.refresh++;
 
+    let ddx = (entities.cage1.body.position.x + entities.cage1.wd / 1.8);
+    Matter.Body.setPosition(entities.cage1.body, { x: ddx, y: entities.cage1.body.position.y });
+
 
     entities.cage10.body = Matter.Bodies.rectangle(entities.cage1.body.position.x + spaceY, entities.cage1.body.position.y, entities.cage10.wd, entities.cage10.ht, { collisionFilter: { group: group0 }, mass: 30 });
-    cage10Body = entities.cage10.body;
     // entities.cage7.body.collisionFilter={group: (-1)};
     entities.cage10.body.isSensor = true;
     Matter.Body.setStatic(entities.cage10.body, true);
@@ -374,6 +407,12 @@ const Physics = (entities, { time }) => {
   entities.catapult5.refresh++;
   entities.ball7.refresh++;
 
+  prEnts[0].refresh++;
+  prEnts[1].refresh++;
+  prEnts[2].refresh++;
+  prEnts[3].refresh++;
+  prEnts[4].refresh++;
+
   //console.log("v:  "+entities.ball7.body.velocity.x+", "+entities.ball7.body.velocity.y);
 
   return entities;
@@ -404,10 +443,10 @@ function drawTheDots() {
   A8.x = (A8.x + entities0.cage8.wd / 2);
   A9.x = (A9.x + entities0.cage9.wd / 2);
 
- // A10.y = (A10.y - entities0.cage10.ht / 2);
+  A10.y = (A10.y - entities0.cage10.ht / 2);
 
   const B = Matter.Vector.clone(ballPos);
-  let di = 34;
+  let di = 40;
   var d1 = { x: (A1.x - B.x) / di, y: (A1.y - B.y) / di };
   var d2 = { x: (A2.x - B.x) / di, y: (A2.y - B.y) / di };
   var d3 = { x: (A3.x - B.x) / di, y: (A3.y - B.y) / di };
@@ -420,39 +459,47 @@ function drawTheDots() {
   var d10 = { x: (A10.x - B.x) / di, y: (A10.y - B.y) / di };
 
 
-  entities0.chicken1.path =  getDots(B, d10,di);
-  entities0.chicken2.path =  getDots(B, d1,di);
-  entities0.chicken3.path =  getDots(B, d2,di);
-  entities0.chicken4.path =  getDots(B, d3,di);
-  entities0.chicken5.path =  getDots(B, d4,di);
-  entities0.chicken6.path =  getDots(B, d5,di);
-  entities0.chicken7.path =  getDots(B, d6,di);
-  entities0.chicken8.path =  getDots(B, d7,di);
-  entities0.chicken9.path =  getDots(B, d8,di);
-  entities0.chicken10.path = getDots(B, d9,di);
+  entities0.chicken1.path = getDots(B, d10, di,entities0.cage1.ht * 2);
+  entities0.chicken2.path = getDots(B, d1, di,entities0.cage1.ht * 2);
+  entities0.chicken3.path = getDots(B, d2, di,entities0.cage1.ht * 2);
+  entities0.chicken4.path = getDots(B, d3, di,entities0.cage1.ht * 2);
+  entities0.chicken5.path = getDots(B, d4, di,entities0.cage1.ht * 2);
+  entities0.chicken6.path = getDots(B, d5, di,entities0.cage1.ht * 2);
+  entities0.chicken7.path = getDots(B, d6, di,entities0.cage1.ht * 2);
+  entities0.chicken8.path = getDots(B, d7, di,entities0.cage1.ht * 2);
+  entities0.chicken9.path = getDots(B, d8, di,entities0.cage1.ht * 2);
+  entities0.chicken10.path = getDots(B, d9, di,entities0.cage1.ht * 2);
 
-  entities0.chicken1.cage =  entities0.cage10;
-  entities0.chicken2.cage =  entities0.cage1;
-  entities0.chicken3.cage =  entities0.cage2;
-  entities0.chicken4.cage =  entities0.cage3;
-  entities0.chicken5.cage =  entities0.cage4;
-  entities0.chicken6.cage =  entities0.cage5;
-  entities0.chicken7.cage =  entities0.cage6;
-  entities0.chicken8.cage =  entities0.cage7;
-  entities0.chicken9.cage =  entities0.cage8;
+  entities0.chicken1.cage = entities0.cage10;
+  entities0.chicken2.cage = entities0.cage1;
+  entities0.chicken3.cage = entities0.cage2;
+  entities0.chicken4.cage = entities0.cage3;
+  entities0.chicken5.cage = entities0.cage4;
+  entities0.chicken6.cage = entities0.cage5;
+  entities0.chicken7.cage = entities0.cage6;
+  entities0.chicken8.cage = entities0.cage7;
+  entities0.chicken9.cage = entities0.cage8;
   entities0.chicken10.cage = entities0.cage9;
 }
 
-function getDots(pointA, delta, di) {
+function goByPath(path,body,fireAftrtDone){
+  bodyGoing=body;
+  thePath=path;
+  ptNr=0;
+  fireAfterPathDone = fireAftrtDone;
+  goPath=true;
+}
+
+function getDots(pointA, delta, di, height) {
   let points = [];
   let v1 = pointA;
   points.push(v1);
 
-  for (let i = 0; i < di - 1; i++) {
+  for (let i = 0; i < di; i++) {
     let vt = Matter.Vector.add(points[i], delta);
     points.push(vt);
   }
-  return applySine(points, entities0.cage1.ht * 2);
+  return applySine(points,height);
 }
 
 function applySine(points, dist) {
@@ -481,7 +528,7 @@ function checkTouch(x, y, entity) {
   return false;
 }
 function resetCatapult() {
-  entities0.dots11.dots=[];
+  entities0.dots11.dots = [];
   entities0.dots11.refresh++;
   resetDots();
   ballIsGoing = false;
@@ -500,30 +547,61 @@ function resetCatapult() {
 
 function explodeCage(cageBody, cageEnt, explEnt) {
 
-  explEnt.posX = (cageBody.position.x - (explEnt.WIDTH / 2));
-  explEnt.posY = (cageBody.position.y - (explEnt.HEIGHT / 2));
+  let dx = 0;
+  let tr = cageEnt.tr;//
+  if (tr > 0) {
+    dx = cageEnt.wd / tr;
+  }
+  Matter.Body.translate(cageBody, { x: dx, y: 0 });
   cageBody.isSensor = false;
-  Matter.Body.setPosition(cageBody, { x: -1000, y: -1000 });
+  cageEnt.wd = cageEnt.wdo;
+  cageEnt.theImage = cageEnt.copen;
+
+  Matter.Body.setPosition(prEnts[openCageCount].body, { x: (cageBody.position.x + (cageEnt.wd) * 0.2), y: cageBody.position.y });
+  let nr = entities0.store.przNrs[openCageCount];
+  if (nr == entities0.store.winNr) {
+    prz.push(prEnts[openCageCount]);
+  }
+  prEnts[openCageCount].theImage = entities0.store.prizes[nr];
+  Matter.Sleeping.set(prEnts[openCageCount].body, false);
+  
+  let pt =prPoints[openCageCount]
+  let delt = Matter.Vector.sub(pt,prEnts[openCageCount].body.position);
+  let stNr=32;
+  delt = Matter.Vector.mult(delt,(1/stNr));
+  var path = getDots(prEnts[openCageCount].body.position, delt, stNr,(entities0.cage1.ht/2));
+  currPrz = prEnts[openCageCount];
+  var functionAfterArrive=prizeArrived;
+  if (openCageCount==4) {
+    functionAfterArrive=lastPrizeArrived;
+  }
+  Matter.Composite.add(wrld1, prEnts[openCageCount].body);
+  Matter.Sleeping.set(prEnts[openCageCount].body, false);
+  Matter.Body.setAngularVelocity(prEnts[openCageCount].body, 0.28);
+  goByPath(path,prEnts[openCageCount].body,functionAfterArrive);
+
+  //Matter.Composite.add(wrld1, prEnts[openCageCount].body);
+  //Matter.Body.applyForce(prEnts[openCageCount].body, prEnts[openCageCount].body, { x: 0.001, y:0 });
+  //Matter.Body.setVelocity(prEnts[openCageCount].body, { x: 3, y: 0 });
+
+  //Matter.Body.setPosition(cageBody, { x: -1000, y: -1000 });
   Matter.Body.setStatic(cageBody, true);
   Matter.Composite.remove(wrld1, cageBody, false);
   openCageCount++;
   cageEnt.refresh++;
-  if (openCageCount == 5) {
-    endGame(false);
-  } else if (chickenUsedCount == 8) {
-    endGame(true);
-  }
+  console.log("open cages: " + openCageCount);
 }
 
 
-function endGame(lost) {
-
-  if (lost == false && entities0.store.ifWin == true) {
+function endGame() {
+  console.log("endgame fired");
+  if (entities0.store.ifWin == true) {
+    
     //stopGame = true;
-    boxGo = true;
+    boxGoAferDelay = true;
     //entities0.store.Win();
   }
-  if (lost == true || entities0.store.ifWin == false) {
+  if (entities0.store.ifWin == false) {
     stopGame = true;
     entities0.store.Lose();
   }
@@ -542,18 +620,27 @@ function removeChicken() {
   }
 }
 
+var boxGoAferDelay = false;
+var framecount = 0;
 var boxGo = false;
+var vectorZero = Matter.Vector.create(0, 0);
 var sp = 19;
 var prz = [];
 var prizesDrop = false;
-var spd1 = 18;
-var spd2 = 18;
-var spd3 = 18;
+var prizesDropGo = false;
 var y_;
-var x_1;
-var x_2;
-var x_3;
+var x_ = [];
+var vects = [];
 const AnimationLoop = (entities, { touches }) => {
+  if (boxGoAferDelay) {
+    framecount++;
+    if (framecount > 3) {
+      boxGoAferDelay = false;
+      framecount = 0;
+      boxGo = true;
+    }
+    return entities;
+  }
   if (boxGo) {
 
     entities.ent24.posX -= sp;
@@ -568,58 +655,103 @@ const AnimationLoop = (entities, { touches }) => {
       var marg = hgt / 8;
       var dm = (entities.store.ht / 6) - (entities.store.ht / 6) / 4;
 
-      y_ = entities.store.ht / 2 - hgt / 2 + marg;
+      y_ = entities.store.ht / 2 - hgt / 2 + marg + dm / 2;
 
-      x_1 = entities.store.wd / 2 - (dm / 2) - dm - marg;
-      x_2 = entities.store.wd / 2 - (dm / 2);
-      x_3 = entities.store.wd / 2 - (dm / 2) + dm + marg;
-
-      entities.pr1.posY = 0 - entities.pr1.HEIGHT;
-      entities.pr2.posY = 0 - entities.pr2.HEIGHT;
-      entities.pr3.posY = 0 - entities.pr3.HEIGHT;
-      entities.pr1.posX = x_1;
-      entities.pr2.posX = x_2;
-      entities.pr3.posX = x_3;
-
-      entities.pr1.rImg = entities.store.prizes[entities.store.winNr];
-      entities.pr2.rImg = entities.store.prizes[entities.store.winNr];
-      entities.pr3.rImg = entities.store.prizes[entities.store.winNr];
+      x_.push((entities.store.wd / 2 - (dm / 2) - dm - marg + dm / 2));
+      x_.push((entities.store.wd / 2 - (dm / 2) + dm / 2));
+      x_.push((entities.store.wd / 2 - (dm / 2) + dm + marg + dm / 2));
       prizesDrop = true;
+      console.log("prize drop will start");
     }
 
     return entities;
   }
 
   if (prizesDrop) {
-    entities.pr1.posY += spd1;
-    entities.pr2.posY += spd2;
-    entities.pr3.posY += spd3;
+    console.log("prize drop started");
 
-    if (entities.pr1.posY > y_ || entities.pr2.posY > y_ || entities.pr3.posY > y_) {
-      entities.pr1.posY = y_;
-      entities.pr2.posY = y_;
-      entities.pr3.posY = y_;
-      prizesDrop = false;
-      entities.ent24.img = entities.store.prizes[entities.store.winNr];
-      entities.pr1.renderer = null;
-      entities.pr2.renderer = null;
-      entities.pr3.renderer = null;
 
-      entities0.store.Win();
+    for (let i = 0; i < prz.length; i++) {
+      let v = Matter.Vector.sub({ x: x_[i], y: y_ }, prz[i].body.position);
+      let dal = 1 / 20;
+      v = Matter.Vector.mult(v, dal);
+      vects.push(v);
+    }
+    prizesDrop = false;
+    prizesDropGo = true;
+    return entities;
+  }
+  if (prizesDropGo) {
+
+    for (let i = 0; i < prz.length; i++) {
+      Matter.Body.setVelocity(prz[i].body, vectorZero);
+      Matter.Body.translate(prz[i].body, vects[i]);
+    }
+
+    framecount++;
+    if (framecount >= 20) {
+      entities0.ent24.img = entities0.store.prizes[entities0.store.winNr];
+      prz.forEach(pr => {
+        pr.theImage = entities0.store.empty;
+      });
       stopGame = true;
+      entities0.store.Win();
+      prizesDropGo = false;
+      framecount = 0;
     }
     return entities;
   }
 
 
-
   return entities;
+}
+var delayRunning = false;
+var frames = 0;
+var delayAmount = 0;
+var fireAfterDelay = theFunction;
+
+var goPath=false;
+var bodyGoing;
+var thePath;
+var ptNr=0;
+var fireAfterPathDone = theFunction;
+
+const DelayLoop = (entities, { touches }) => {
+  if (delayRunning) {
+    frames++;
+    if (frames >= delayAmount) {
+      delayRunning = false;
+      frames = 0;
+      delayAmount = 0;
+      fireAfterDelay();
+    }
+    return entities;
+  }
+  if (goPath) {
+    Matter.Body.setPosition(bodyGoing, thePath[ptNr]);
+    ptNr++;
+    if (ptNr >= thePath.length) {
+      goPath=false;
+      bodyGoing=undefined;
+      thePath=undefined;
+      ptNr=0;
+      fireAfterPathDone();
+    }
+    return entities;
+  }
+  return entities;
+}
+
+function theFunction() {
+
+
 }
 
 
 export { Physics };
 export { GameLoop };
 export { AnimationLoop };
+export { DelayLoop };
 
 export function resetSys() {
   da = true;
@@ -629,7 +761,7 @@ export function resetSys() {
   resetCatpl = false;
   shY = undefined;
   goForce = false;
-  chickensLst = undefined;
+  chickensLst;
   xDrop = undefined;
   yDrop = undefined;
   cnt1 = 0;
@@ -637,31 +769,40 @@ export function resetSys() {
   entities0 = undefined;
   catapultBd = undefined;
 
-  cage1Body = undefined;
-  cage2Body = undefined;
-  cage3Body = undefined;
-  cage4Body = undefined;
-  cage5Body = undefined;
-  cage6Body = undefined;
-  cage7Body = undefined;
-  cage8Body = undefined;
-  cage9Body = undefined;
-  cage10Body = undefined;
 
   ballBody = undefined;
+  ballPos = undefined;
 
   goingChicken = undefined;
   openCageCount = 0;
   chickenUsedCount = 0;
+  ballIsGoing = false;
+  notAlowedToClick = false;
 
+
+  currentDots = undefined;
+  currentCage = undefined;
+  nextPoint = undefined;
+  pointNr = undefined;
+  dirV = undefined;
+  chickenEnts = undefined;
+  prEnts = undefined;
+
+
+  boxGoAferDelay = false;
+  framecount = 0;
   boxGo = false;
+  vectorZero = Matter.Vector.create(0, 0);
   sp = 19;
+  prz = [];
   prizesDrop = false;
-  spd1 = 18;
-  spd2 = 18;
-  spd3 = 18;
-  y_ = undefined;
-  x_1 = undefined;
-  x_2 = undefined;
-  x_3 = undefined;
+  prizesDropGo = false;
+  y_= undefined;
+  x_ = [];
+  vects = [];
+
+  delayRunning = false;
+  frames = 0;
+  delayAmount = 0;
+  fireAfterDelay = theFunction;
 }

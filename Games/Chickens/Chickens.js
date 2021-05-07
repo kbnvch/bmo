@@ -22,6 +22,10 @@ const boxImage = Variables.BoxImage;
 const wallImage = Variables.WallImage;
 const roofImage = Variables.RoofImage;
 const cageImage = Variables.CageImage;
+const cageOpenImage = Variables.CageOpenImage;
+const cageOpenImage10 = Variables.CageOpenImage10;
+const displayImage = Variables.DisplayImage;
+const birbImage = Variables.BirbImage;
 
 const chickenImage1 = Variables.ChickenImage1;
 const chickenImage2 = Variables.ChickenImage2;
@@ -59,8 +63,9 @@ import { PrizeBox1 } from "./renderers";
 //import { UpdateLoop2 } from "./systems"
 import { Physics } from "./systems2"
 import { GameLoop } from "./systems2"
-import {AnimationLoop} from "./systems2";
-import {resetSys} from "./systems2";
+import { AnimationLoop } from "./systems2";
+import { DelayLoop } from "./systems2";
+import { resetSys } from "./systems2";
 
 
 import appreg from './../../appRegistryController';
@@ -90,24 +95,20 @@ const grndProportion = Image.resolveAssetSource(groundImage).height / Image.reso
 const grndHeight = WIDTH * grndProportion;
 
 
-const brjProportion = Image.resolveAssetSource(barrierImage).height / Image.resolveAssetSource(barrierImage).width;
-const brjwidth = boxysize;//*2;
-const brjHeight = brjwidth * brjProportion;//rnb1Image
-
 const rnb1Proportion = Image.resolveAssetSource(rnb1Image).height / Image.resolveAssetSource(rnb1Image).width;
 var rnb1width = (WIDTH / 1.3 - boxysize);//*2;
-console.log("starting rnb1width value: "+rnb1width+"   and proportion:"+(rnb1width/HEIGHT));
-if ((rnb1width/HEIGHT)>0.39){
-  rnb1width=0.39*HEIGHT;
-  console.log("changing proportionsA.value: "+rnb1width);
+console.log("starting rnb1width value: " + rnb1width + "   and proportion:" + (rnb1width / HEIGHT));
+if ((rnb1width / HEIGHT) > 0.39) {
+  rnb1width = 0.39 * HEIGHT;
+  console.log("changing proportionsA.value: " + rnb1width);
 }
 const rnb1Height = rnb1width * rnb1Proportion;//rnb1Image
 
 const rnb2Proportion = Image.resolveAssetSource(rnb2Image).height / Image.resolveAssetSource(rnb2Image).width;
 var rnb2width = (WIDTH / 1.3 - boxysize);//*2;
-if ((rnb2width/HEIGHT)>0.39){
-  rnb2width=0.39*HEIGHT;
-  console.log("changing proportionsB. Value: "+rnb2width);
+if ((rnb2width / HEIGHT) > 0.39) {
+  rnb2width = 0.39 * HEIGHT;
+  console.log("changing proportionsB. Value: " + rnb2width);
 }
 const rnb2Height = rnb2width * rnb2Proportion;//rnb1Image
 
@@ -139,6 +140,19 @@ const cageProportion = Image.resolveAssetSource(cageImage).height / Image.resolv
 const cageWidth = WIDTH / 6;
 const cageHeight = cageWidth * cageProportion;//rnb1Image
 
+const openCProportion = Image.resolveAssetSource(cageOpenImage).height / Image.resolveAssetSource(cageOpenImage).width;
+const openCWidth = cageHeight / openCProportion;
+
+const openCProportion10 = Image.resolveAssetSource(cageOpenImage10).height / Image.resolveAssetSource(cageOpenImage10).width;
+const openCWidth10 = cageHeight / openCProportion10;
+
+const displayProportion = Image.resolveAssetSource(displayImage).height / Image.resolveAssetSource(displayImage).width;
+const displaywidth = (WIDTH*0.47);
+const displayHeight = displaywidth * displayProportion;//rnb1Image
+
+const brbProportion = Image.resolveAssetSource(birbImage).height / Image.resolveAssetSource(birbImage).width;
+const brbwidth = displaywidth*0.16;//*2;
+const brbHeight = brbwidth * brbProportion;//rnb1Image
 
 //barrierImage
 
@@ -152,10 +166,15 @@ const arrBox = getArrowBoxes();
 const ballBox = getBalloonBoxes();
 const prizProportion = Image.resolveAssetSource(prizeImages[0]).height / Image.resolveAssetSource(prizeImages[0]).width;
 const expProportion = Image.resolveAssetSource(exp1).height / Image.resolveAssetSource(exp1).width;
-const expWidth=cageWidth;
-const expHeight=expWidth*expProportion;
+const expWidth = cageWidth;
+const expHeight = expWidth * expProportion;
 const binary = [0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0];
 const bloons = [13, 18, 11, 16, 14, 19, 20, 17, 12, 15];
+const pt1 = {x:(WIDTH-displaywidth)+(displaywidth*0.87727),y:((HEIGHT - grndHeight)-displayHeight)+(0.11515*displaywidth)};
+const pt2 = {x:(WIDTH-displaywidth)+(displaywidth*0.68788),y:((HEIGHT - grndHeight)-displayHeight)+(0.11515*displaywidth)};
+const pt3 = {x:(WIDTH-displaywidth)+(displaywidth*0.5),y:((HEIGHT - grndHeight)-displayHeight)+(0.11515*displaywidth)};
+const pt4 = {x:(WIDTH-displaywidth)+(displaywidth*0.30909),y:((HEIGHT - grndHeight)-displayHeight)+(0.11515*displaywidth)};
+const pt5 = {x:(WIDTH-displaywidth)+(displaywidth*0.11969),y:((HEIGHT - grndHeight)-displayHeight)+(0.11515*displaywidth)};
 
 
 
@@ -178,7 +197,7 @@ export default class Chickens extends PureComponent {
     theprops = props;
     console.log("starting game");
     this1 = this;
-    systz = [Physics, GameLoop,AnimationLoop];
+    systz = [Physics, GameLoop, AnimationLoop, DelayLoop];
 
 
 
@@ -188,186 +207,6 @@ export default class Chickens extends PureComponent {
       getPrizesWin(winingImageNr);
     }
     console.log("   " + przNrs);
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    console.log("random 2 max: "+getRandom(2));
-    
 
   }
   componentWillUnmount() {
@@ -388,6 +227,9 @@ export default class Chickens extends PureComponent {
           systems={systz}
           entities={{
             0: { WIDTH: WIDTH, HEIGHT: HEIGHT, BGimage: backgroundImage, renderer: <TheBackground /> },
+            display1: { posX: (WIDTH-displaywidth), posY: (HEIGHT - grndHeight)-displayHeight, WIDTH: displaywidth, HEIGHT: displayHeight,prwd:displaywidth*0.1818,pt1:pt1,pt2:pt2,pt3:pt3,pt4:pt4,pt5:pt5, rImg: displayImage, renderer: <RendZ /> },
+            birb1: { posX: (WIDTH-displaywidth)-(brbHeight*0.25), posY: (HEIGHT - grndHeight)-displayHeight-(brbHeight*0.8), WIDTH: brbwidth, HEIGHT: brbHeight, rImg: birbImage, renderer: <RendZ /> },
+            ground1: { posX: 0, posY: HEIGHT - grndHeight, WIDTH: WIDTH, HEIGHT: grndHeight, rImg: groundImage, renderer: <RendZ /> },
             ground1: { posX: 0, posY: HEIGHT - grndHeight, WIDTH: WIDTH, HEIGHT: grndHeight, rImg: groundImage, renderer: <RendZ /> },
             roof1: { posX: 0, posY: (0 - roofHeight / 2), WIDTH: roofWidth, HEIGHT: roofHeight, rImg: roofImage, renderer: <RendZ /> },
             wall1: { posX: 0 - wallwidth / 2, posY: 0, WIDTH: wallwidth, HEIGHT: wallHeight, rImg: wallImage, renderer: <RendZ /> },
@@ -396,72 +238,69 @@ export default class Chickens extends PureComponent {
 
             rnb1: { posX: WIDTH - rnb1width, posY: (rnb1Height * 1.2), WIDTH: rnb1width, HEIGHT: rnb1Height, rImg: rnb1Image, renderer: <RendZ /> },
             rnb2: { posX: WIDTH - rnb2width, posY: (rnb2Height * 1.2) + rnb1Height * 2, WIDTH: rnb2width, HEIGHT: rnb2Height, rImg: rnb2Image, renderer: <RendZ /> },
-            /**
-                 const x = this.props.posX;
-                const y = this.props.posY;
-                const bllwidth =this.props.bllwidth;
-                const blHeight=this.props.blHeight;
-                const balloonImage = this.props.balloonImage;
-                var rt = this.props.rt; 
-              
-              
-              
-             
-             */
-            chicken1: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage1, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken2: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage2, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken3: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage3, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken4: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage4, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken5: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage5, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken6: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage6, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken7: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage7, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken8: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage8, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken9: { path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage9, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            chicken10:{ path:[],cage:undefined,went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage10, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
 
-   
+            cage1: { body: undefined, tr: 0, wd: cageWidth, ht: cageHeight, theImage: cageImage, wdo: openCWidth10, copen: cageOpenImage10, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage2: { body: undefined, tr: 2.53, wd: cageWidth, ht: cageHeight, theImage: cageImage, wdo: openCWidth, copen: cageOpenImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage3: { body: undefined, tr: 2.53, wd: cageWidth, ht: cageHeight, theImage: cageImage, wdo: openCWidth, copen: cageOpenImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage4: { body: undefined, tr: 2.53, wd: cageWidth, ht: cageHeight, theImage: cageImage, wdo: openCWidth, copen: cageOpenImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage5: { body: undefined, tr: 2.53, wd: cageWidth, ht: cageHeight, theImage: cageImage, wdo: openCWidth, copen: cageOpenImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage6: { body: undefined, tr: 2.53, wd: cageWidth, ht: cageHeight, theImage: cageImage, wdo: openCWidth, copen: cageOpenImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage7: { body: undefined, tr: 2.53, wd: cageWidth, ht: cageHeight, theImage: cageImage, wdo: openCWidth, copen: cageOpenImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage8: { body: undefined, tr: 2.53, wd: cageWidth, ht: cageHeight, theImage: cageImage, wdo: openCWidth, copen: cageOpenImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage9: { body: undefined, tr: 2.53, wd: cageWidth, ht: cageHeight, theImage: cageImage, wdo: openCWidth, copen: cageOpenImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            cage10: { body: undefined, tr: 0, wd: cageWidth, ht: cageHeight, theImage: cageImage, wdo: openCWidth10, copen: cageOpenImage10, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
 
+
+
+
+            chicken1: { path: [], cage: undefined, went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage1, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken2: { path: [], cage: undefined, went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage2, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken3: { path: [], cage: undefined, went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage3, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken4: { path: [], cage: undefined, went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage4, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken5: { path: [], cage: undefined, went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage5, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken6: { path: [], cage: undefined, went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage6, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken7: { path: [], cage: undefined, went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage7, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken8: { path: [], cage: undefined, went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage8, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken9: { path: [], cage: undefined, went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage9, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            chicken10: { path: [], cage: undefined, went: false, body: undefined, wd: arrWdt, ht: arrHeight, theImage: chickenImage10, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+
+            ent24: { boxImg: boxBackgroundImage, img: emptyImg, posX: WIDTH, tx: "You win !", WIDTH: WIDTH, HEIGHT: HEIGHT, renderer: <PrizeBox1 /> },
+
+            pr1: { path: [], body: undefined, wd: cageWidth * 0.6, ht: cageHeight * 0.6, theImage: emptyImg, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            pr2: { path: [], body: undefined, wd: cageWidth * 0.6, ht: cageHeight * 0.6, theImage: emptyImg, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            pr3: { path: [], body: undefined, wd: cageWidth * 0.6, ht: cageHeight * 0.6, theImage: emptyImg, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            pr4: { path: [], body: undefined, wd: cageWidth * 0.6, ht: cageHeight * 0.6, theImage: emptyImg, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+            pr5: { path: [], body: undefined, wd: cageWidth * 0.6, ht: cageHeight * 0.6, theImage: emptyImg, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
+
+            dots11: { dots: [], refresh: 0, color: "rgba(1, 0, 158, 1.0)", renderer: <Circle1 /> },
 
 
             catapult5: { body: undefined, wd: plankwidth, ht: plankHeight, theImage: plankImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
             stand6: { posX: 0, posY: 0, WIDTH: pillarwidth, HEIGHT: pillarHeight, rImg: pillarImage, renderer: <RendZ /> },
             ball7: { body: undefined, wd: pillarwidth * 1.8, ht: pillarwidth * 1.8, theImage: boltImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
 
-            cage1: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            cage2: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            cage3: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            cage4: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            cage5: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            cage6: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            cage7: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            cage8: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            cage9: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
-            cage10: { body: undefined, wd: cageWidth, ht: cageHeight, theImage: cageImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
 
-            expl1: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
-            expl2: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
-            expl3: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
-            expl4: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
-            expl5: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
-            expl6: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
-            expl7: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
-            expl8: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
-            expl9: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
-            expl10: { posX:-1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+
+            expl1: { posX: -1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl2: { posX: -1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl3: { posX: -1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl4: { posX: -1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl5: { posX: -1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl6: { posX: -1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl7: { posX: -1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl8: { posX: -1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl9: { posX: -1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
+            expl10: { posX: -1000, posY: -1000, WIDTH: expWidth, HEIGHT: expHeight, rImg: exp1, renderer: <RendZ /> },
 
 
             chicken99: { body: undefined, wd: arrWdt, ht: arrHeight, theImage: boxImage, refresh: 0, rt: "0deg", renderer: <Rend4 /> },
 
-            store: { wd: WIDTH, ht: HEIGHT, refresh: 0, Win:Win,Lose:Lose,ifWin:ifWin,prizes: prizeImages, winNr:winingImageNr },
+            store: { wd: WIDTH, ht: HEIGHT, refresh: 0, Win: Win, Lose: Lose,randList:getRandomSortedList(10), ifWin: ifWin, przNrs: przNrs, prizes: prizeImages, empty: emptyImg, winNr: winingImageNr },
 
-            ent24: { boxImg: boxBackgroundImage, img: emptyImg, posX: WIDTH, tx: "You win !", WIDTH: WIDTH, HEIGHT: HEIGHT, renderer: <PrizeBox1 /> },
-            
-            
-            pr1: { posX: -1000, posY: -1000, WIDTH: cageWidth, HEIGHT: cageHeight, rImg: cageImage, renderer: <RendZ /> },
-            pr2: { posX: -1000, posY: -1000, WIDTH: cageWidth, HEIGHT: cageHeight, rImg: cageImage, renderer: <RendZ /> },
-            pr3: { posX: -1000, posY: -1000, WIDTH: cageWidth, HEIGHT: cageHeight, rImg: cageImage, renderer: <RendZ /> },
 
-            dots11: { dots: [],refresh: 0, color:"rgba(1, 0, 158, 1.0)",renderer: <Circle1 /> },
+
+
+            
 
           }}>
 
@@ -737,12 +576,29 @@ function getRandomButNot(max, nr) {
   return n;
 }
 
-function getRandomSortedList(nrOfMembers){
 
+function getRandomSortedList(memberCount) {
+  var daList = [];
+  var sk;
 
+  for (let i = 0; i < memberCount; i++) {
+    do {
+      sk = getRandom(memberCount);
+    }
+    while (checkIfExistInList(daList, sk))
+    daList.push(sk);
+  }
+  return daList;
+}
 
+function checkIfExistInList(list, member) {
+  for (let i = 0; i < list.length; i++) {
+    if (list[i]==member) {
+      return true;
+    }
 
-
+  }
+  return false;
 }
 
 
