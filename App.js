@@ -33,6 +33,7 @@ import {name as appName} from './app.json';
 import Balloons from './Games/Balloons/Balloons';
 import Maze from './Games/Maze/Maze';
 import Chickens from './Games/Chickens/Chickens';
+import Dziugas from './Games/Dziugas/Dziugas';
 
 var theprops;
 export default class App extends PureComponent {
@@ -80,6 +81,15 @@ export default class App extends PureComponent {
                 <Button
                   onPress={onButtonPressedChickens}
                   title="click for Chickens    "
+                  color="#841584"
+                />
+              </View>
+
+              <View style={styles.button}>
+                <Text>.</Text>
+                <Button
+                  onPress={onButtonPressedDziugas}
+                  title="click for Dziugas    "
                   color="#841584"
                 />
               </View>
@@ -180,5 +190,10 @@ function onButtonPressedMaze() {
 
 function onButtonPressedChickens() {
   appreg.registerComponent(appName, () => Chickens);
+  appreg.runApplication(appName,theprops);
+}
+
+function onButtonPressedDziugas() {
+  appreg.registerComponent(appName, () => Dziugas);
   appreg.runApplication(appName,theprops);
 }
